@@ -1,0 +1,137 @@
+<template>
+  <a-layout class="layout">
+    <a-layout-header class="header">
+      <div class="logo" >logo</div>
+      <a-menu
+          theme="dark"
+          mode="horizontal"
+          v-model:selectedKeys="selectedKey"
+          :style="{ lineHeight: '58px' }"
+      >
+        <a-menu-item>
+          <a href="http://127.0.0.1:4200">业务拓扑</a>
+        </a-menu-item>
+        <a-menu-item>
+          <a href="http://127.0.0.1:4203">运维工具箱</a>
+        </a-menu-item>
+        <a-menu-item key="3">CI</a-menu-item>
+        <a-menu-item key="/">
+          <router-link to="/">CD</router-link>
+        </a-menu-item>
+        <a-menu-item key="5">监控中心</a-menu-item>
+        <a-menu-item key="6">日志中心</a-menu-item>
+      </a-menu>
+    </a-layout-header>
+    <a-layout>
+      <a-layout-sider width="200" style="background: #fff">
+        <a-menu
+            class="menu-sider"
+            mode="inline"
+            v-model:selectedKeys="selectedKeysMenu"
+            :style="{ height: '100%', borderRight: 0 }"
+        >
+          <a-menu-item :key="'home'">
+            <span>
+<!--              <user-outlined/>-->
+              <router-link to="/cd/home">首页</router-link>
+            </span>
+          </a-menu-item>
+          <a-menu-item :key="'about'">
+            <span>
+<!--              <history-outlined/>-->
+              <router-link to="/cd/about">历史记录</router-link>
+            </span>
+          </a-menu-item>
+          <!--          <a-menu-item :key="'task-record'">-->
+          <!--            <span>-->
+          <!--              <profile-outlined/>-->
+          <!--              <router-link to="/toolbox/task-record">日程任务记录</router-link>-->
+          <!--            </span>-->
+          <!--          </a-menu-item>-->
+          <!--          <a-menu-item :key="'task-management'">-->
+          <!--            <span>-->
+          <!--              <profile-outlined/>-->
+          <!--              <router-link to="/toolbox/task-management">日程任务管理</router-link>-->
+          <!--            </span>-->
+          <!--          </a-menu-item>-->
+<!--          <a-menu-item v-for="item in bar" :key="item.path">-->
+<!--            <span>-->
+<!--              <icon-font :type="item.icon" />-->
+<!--              <router-link :to="'/toolbox/' + item.path">{{ item.name }}</router-link>-->
+<!--            </span>-->
+<!--          </a-menu-item>-->
+        </a-menu>
+      </a-layout-sider>
+      <a-layout-content class="common-content">
+        <router-view></router-view>
+      </a-layout-content>
+    </a-layout>
+  </a-layout>
+</template>
+
+<script lang="ts">
+import {ref} from 'vue'
+
+export default {
+  name: "Layout",
+  setup() {
+
+    const selectedKey = ref(['/'])
+    const selectedKeysMenu = ref()
+
+    return {
+      selectedKey,
+      selectedKeysMenu,
+    }
+  }
+}
+</script>
+
+<style scoped lang="less">
+.layout {
+  width: 100vw;
+  height: inherit;
+}
+// 侧边栏滚动
+.ant-layout-sider {
+  overflow: auto;
+}
+
+.logo {
+  width: 120px;
+  height: 58px;
+  float: left;
+  color: #fff;
+  margin-right: 30px;
+  text-align: left;
+  font-weight: 500;
+}
+.common-content {
+  background: #fff;
+  border-left: 1px solid #DCDEE5;
+}
+.layout /deep/ .ant-layout-header {
+  height: 58px;
+  display: flex;
+}
+.menu-sider {
+  li {
+    text-align: left;
+  }
+  a::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: transparent;
+    content: '';
+  }
+  a {
+    color: rgba(0, 0, 0, 0.85);
+  }
+  .ant-menu-item-selected a, a:hover {
+    color: #1890ff;
+  }
+}
+</style>
