@@ -25,29 +25,17 @@
     <a-layout>
       <a-layout-sider width="200" style="background: #fff">
         <a-menu
-            class="menu-sider"
+            class="menu-side"
             mode="inline"
             v-model:selectedKeys="selectedKeysMenu"
             :style="{ height: '100%', borderRight: 0 }"
         >
-          <a-menu-item :key="'home'">
+          <a-menu-item v-for="item in bar" :key="item.path">
             <span>
-<!--              <user-outlined/>-->
-              <router-link to="/cd/home">首页</router-link>
+              <icon-font :type="item.icon" />
+              <router-link :to="'/cd/' + item.path">{{ item.name }}</router-link>
             </span>
           </a-menu-item>
-          <a-menu-item :key="'about'">
-            <span>
-<!--              <history-outlined/>-->
-              <router-link to="/cd/about">历史记录</router-link>
-            </span>
-          </a-menu-item>
-<!--          <a-menu-item v-for="item in bar" :key="item.path">-->
-<!--            <span>-->
-<!--              <icon-font :type="item.icon" />-->
-<!--              <router-link :to="'/toolbox/' + item.path">{{ item.name }}</router-link>-->
-<!--            </span>-->
-<!--          </a-menu-item>-->
         </a-menu>
       </a-layout-sider>
       <a-layout-content class="common-content">
@@ -58,21 +46,46 @@
 </template>
 
 <script lang="ts">
-import {ref} from 'vue'
+import {reactive, ref, toRefs, watch} from 'vue'
 import {useRoute} from "vue-router";
+import {createFromIconfontCN} from '@ant-design/icons-vue'
+
+export interface BarItem {
+  icon: string;
+  path: string;
+  name: string;
+}
+
+const IconFont = createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/font_2598067_jca7prjkbw.js'
+})
 
 export default {
   name: "Layout",
+  components: {
+    IconFont,
+  },
   setup() {
     const route = useRoute()
     const url = route.path.split('/')
 
-    const selectedKey = ref(['/'])
-    const selectedKeysMenu = ref([url[2]])
+    const state = reactive({
+      selectedKey: ['/'],
+      selectedKeysMenu: [url[2]],
+    })
+    const bar = ref<BarItem[]>([
+      {icon: 'icon-home', path: 'home', name: '首页'},
+      {icon: 'icon-about', path: 'about', name: '关于' },
+    ])
+
+    watch(() => route.path, (value) => {
+      const url = value.split('/')
+      state.selectedKeysMenu = [url[2]]
+    })
 
     return {
-      selectedKey,
-      selectedKeysMenu,
+      ...toRefs(state),
+      bar,
     }
   }
 }
@@ -105,10 +118,8 @@ export default {
   height: 58px;
   display: flex;
 }
-.menu-sider {
-  li {
-    text-align: left;
-  }
+.menu-side {
+  text-align: left;
   a::before {
     position: absolute;
     top: 0;
