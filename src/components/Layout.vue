@@ -71,13 +71,16 @@
 
 <script lang="ts">
 import {ref} from 'vue'
+import {useRoute} from "vue-router";
 
 export default {
   name: "Layout",
   setup() {
+    const route = useRoute()
+    const url = route.path.split('/')
 
     const selectedKey = ref(['/'])
-    const selectedKeysMenu = ref()
+    const selectedKeysMenu = ref([url[2]])
 
     return {
       selectedKey,
