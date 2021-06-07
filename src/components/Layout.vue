@@ -42,18 +42,6 @@
               <router-link to="/cd/about">历史记录</router-link>
             </span>
           </a-menu-item>
-          <!--          <a-menu-item :key="'task-record'">-->
-          <!--            <span>-->
-          <!--              <profile-outlined/>-->
-          <!--              <router-link to="/toolbox/task-record">日程任务记录</router-link>-->
-          <!--            </span>-->
-          <!--          </a-menu-item>-->
-          <!--          <a-menu-item :key="'task-management'">-->
-          <!--            <span>-->
-          <!--              <profile-outlined/>-->
-          <!--              <router-link to="/toolbox/task-management">日程任务管理</router-link>-->
-          <!--            </span>-->
-          <!--          </a-menu-item>-->
 <!--          <a-menu-item v-for="item in bar" :key="item.path">-->
 <!--            <span>-->
 <!--              <icon-font :type="item.icon" />-->
