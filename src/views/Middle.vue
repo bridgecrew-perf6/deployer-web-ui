@@ -13,7 +13,7 @@ export default {
 
     const login = async () => {
       const data = await deployerRepository.login()
-      if (data && data.token) {
+      if (data?.token) {
         await localStorage.setItem('token', data.token)
         await router.push('/cd/home').then()
       }

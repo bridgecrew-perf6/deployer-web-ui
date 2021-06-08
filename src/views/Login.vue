@@ -9,17 +9,25 @@
 
 <script lang="ts">
 import deployerRepository from "@/api/deployerRepository";
+import {onErrorCaptured} from 'vue'
 
 export default {
   name: "Login",
   setup() {
     const login = async () => {
-      const data = await deployerRepository.login()
-      if (data && data.url) {
-        window.location.href = data.url
-        console.log(data, ';;;;')
+      try {
+        const data = await deployerRepository.login()
+        if (data?.url) {
+          window.location.href = data.url
+        }
+      } catch (e) {
+        console.error(e)
       }
     }
+    // onErrorCaptured((err) => {
+    //   console.error(err, '[[[')
+    //   return true
+    // })
 
     return {
       login,

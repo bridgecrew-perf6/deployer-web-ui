@@ -6,6 +6,6 @@ import {LoginResponse} from "@/utils/response";
 const ApiLogin = '/api/v1/sso/login';
 
 export default {
-    login: () => request.get<LoginResponse>(`${ApiLogin}`).catch(err => console.error(err)),
+    login: () => request.get<LoginResponse>(`${ApiLogin}`)
 }
 
