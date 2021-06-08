@@ -15,7 +15,10 @@ export default {
   setup() {
     const login = async () => {
       const data = await deployerRepository.login()
-      console.log(data, ';;;')
+      if (data && data.url) {
+        window.location.href = data.url
+        console.log(data, ';;;;')
+      }
     }
 
     return {

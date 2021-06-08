@@ -3,7 +3,11 @@ import {createRouter, createWebHistory, RouteRecordRaw} from "vue-router";
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
-        redirect: '/cd/home',
+        redirect: '/middle',
+    },
+    {
+        path: '/middle',
+        component: () => import('../views/Middle.vue'),
     },
     {
         path: '/login',

@@ -7,11 +7,7 @@ const vueConfig = {
         open: true,
         proxy: {
             '/api/v1': {
-                target: 'http://prometheus.proxy.sumscope.com:8000',
-                changeOrigin: true,
-            },
-            '/api': {
-                target: 'https://demo.promlens.com',
+                target: 'http://172.16.78.42:8003',
                 changeOrigin: true,
             },
         }
