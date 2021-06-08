@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import {reactive, ref, toRefs, watch} from 'vue'
+import {reactive, ref, toRefs, watch, isReadonly} from 'vue'
 import {useRoute} from "vue-router";
 import {createFromIconfontCN} from '@ant-design/icons-vue'
 
@@ -73,15 +73,16 @@ export default {
       selectedKey: ['/'],
       selectedKeysMenu: [url[2]],
     })
+
     const bar = ref<BarItem[]>([
       {icon: 'icon-home', path: 'home', name: '首页'},
       {icon: 'icon-about', path: 'about', name: '关于' },
     ])
 
-    watch(() => route.path, (value) => {
-      const url = value.split('/')
-      state.selectedKeysMenu = [url[2]]
-    })
+    // watch(() => route.path, (value) => {
+    //   const url = value.split('/')
+    //   state.selectedKeysMenu = [url[2]]
+    // })
 
     return {
       ...toRefs(state),
