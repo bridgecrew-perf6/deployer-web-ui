@@ -2,25 +2,45 @@
   <a-layout class="layout">
     <a-layout-header class="header">
       <div class="logo" >logo</div>
-      <a-menu
-          theme="dark"
-          mode="horizontal"
-          v-model:selectedKeys="selectedKey"
-          :style="{ lineHeight: '58px' }"
-      >
-        <a-menu-item>
-          <a href="http://127.0.0.1:4200">业务拓扑</a>
-        </a-menu-item>
-        <a-menu-item>
-          <a href="http://127.0.0.1:4203">运维工具箱</a>
-        </a-menu-item>
-        <a-menu-item key="3">CI</a-menu-item>
-        <a-menu-item key="/">
-          <router-link to="/">CD</router-link>
-        </a-menu-item>
-        <a-menu-item key="5">监控中心</a-menu-item>
-        <a-menu-item key="6">日志中心</a-menu-item>
-      </a-menu>
+      <div class="layout-header-menu">
+        <a-menu
+            theme="dark"
+            mode="horizontal"
+            v-model:selectedKeys="selectedKey"
+            :style="{ lineHeight: '58px' }"
+        >
+          <a-menu-item>
+            <a href="http://127.0.0.1:4200">业务拓扑</a>
+          </a-menu-item>
+          <a-menu-item>
+            <a href="http://127.0.0.1:4203">运维工具箱</a>
+          </a-menu-item>
+          <a-menu-item key="3">CI</a-menu-item>
+          <a-menu-item key="/">
+            <router-link to="/">CD</router-link>
+          </a-menu-item>
+          <a-menu-item key="5">监控中心</a-menu-item>
+          <a-menu-item key="6">日志中心</a-menu-item>
+        </a-menu>
+        <section>
+          <a-avatar class="user-avatar">
+            <template #icon><UserOutlined /></template>
+          </a-avatar>
+          <a-dropdown>
+            <a class="ant-dropdown-link" @click.prevent>
+              {{ username }}
+              <DownOutlined />
+            </a>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item>
+                  <a @click="logout()">退出</a>
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
+        </section>
+      </div>
     </a-layout-header>
     <a-layout>
       <a-layout-sider width="200" style="background: #fff">
@@ -57,10 +77,10 @@
 
 <script lang="ts">
 import {reactive, ref, toRefs, watch, isReadonly, onMounted} from 'vue'
-import {useRoute} from "vue-router";
-import {createFromIconfontCN} from '@ant-design/icons-vue'
+import {useRoute, useRouter} from "vue-router";
+import {createFromIconfontCN, UserOutlined, DownOutlined} from '@ant-design/icons-vue'
 import bizRepositories from "@/composable/bizRepositories";
-import jwt from 'jsonwebtoken'
+import jwtDecode from "jwt-decode";
 
 export interface BarItem {
   icon: string;
@@ -76,24 +96,30 @@ export default {
   name: "Layout",
   components: {
     IconFont,
+    UserOutlined,
+    DownOutlined,
   },
   setup() {
     const route = useRoute()
+    const router = useRouter()
     const url = route.path.split('/')
 
     const { bizId, bizList } = bizRepositories()
-    const token = localStorage.getItem('token')
-    const userInfo = ref()
 
     const state = reactive({
       selectedKey: ['/'],
       selectedKeysMenu: [url[2]],
+      username: '用户名',
     })
 
     const bar = ref<BarItem[]>([
       {icon: 'icon-home', path: 'biz', name: '总览'},
       {icon: 'icon-about', path: 'about', name: '关于' },
     ])
+    const logout = () => {
+      localStorage.removeItem('token')
+      router.push('/login')
+    }
 
     // watch(() => route.path, (value) => {
     //   const url = value.split('/')
@@ -101,9 +127,10 @@ export default {
     // })
 
     onMounted(() => {
+      const token = localStorage.getItem('token')
       if (token) {
-        userInfo.value = jwt.decode(token)
-        console.log(userInfo.value, 'user info')
+        const userInfo = jwtDecode<{[key: string]: string}>(token)
+        state.username = userInfo?.name || userInfo?.username
       }
     })
 
@@ -112,6 +139,7 @@ export default {
       bizList,
       ...toRefs(state),
       bar,
+      logout,
     }
   }
 }
@@ -136,6 +164,19 @@ export default {
   margin-right: 30px;
   text-align: left;
   font-weight: 500;
+}
+.layout-header-menu {
+  display: flex;
+  height: 100%;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+  ul, section {
+    white-space: nowrap;
+  }
+  .user-avatar {
+    margin-right: 4px;
+  }
 }
 .common-content {
   background: #fff;
