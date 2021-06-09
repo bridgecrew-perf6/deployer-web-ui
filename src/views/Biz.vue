@@ -8,7 +8,7 @@
 import {ref} from "vue";
 
 export default {
-  name: "Home",
+  name: "Biz",
   setup() {
     const a = ref(['/'])
     const b = ref('home')

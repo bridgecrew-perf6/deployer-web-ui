@@ -15,12 +15,12 @@ export default {
       const data = await deployerRepository.login()
       if (data?.token) {
         await localStorage.setItem('token', data.token)
-        await router.push('/cd/home').then()
+        await router.push('/cd/biz').then()
       }
     }
 
     if (token) {
-      router.push('/cd/home')
+      router.push('/cd/biz')
     } else {
       login()
     }

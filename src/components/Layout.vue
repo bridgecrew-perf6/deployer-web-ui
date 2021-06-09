@@ -24,6 +24,19 @@
     </a-layout-header>
     <a-layout>
       <a-layout-sider width="200" style="background: #fff">
+        <div class="select-menu-contain">
+          <a-select
+              v-model:value="bizId"
+              show-search
+              placeholder="Select a biz"
+              style="width: 100%"
+              :filter-option="filterOption"
+          >
+            <a-select-option value="jack">Jack</a-select-option>
+            <a-select-option value="lucy">Lucy</a-select-option>
+            <a-select-option value="tom">Tom</a-select-option>
+          </a-select>
+        </div>
         <a-menu
             class="menu-side"
             mode="inline"
@@ -49,6 +62,7 @@
 import {reactive, ref, toRefs, watch, isReadonly} from 'vue'
 import {useRoute} from "vue-router";
 import {createFromIconfontCN} from '@ant-design/icons-vue'
+import bizRepositories from "@/composable/bizRepositories";
 
 export interface BarItem {
   icon: string;
@@ -69,15 +83,23 @@ export default {
     const route = useRoute()
     const url = route.path.split('/')
 
+    const {bizId, bizList} = bizRepositories()
+    console.log(bizList)
+
     const state = reactive({
       selectedKey: ['/'],
       selectedKeysMenu: [url[2]],
     })
 
     const bar = ref<BarItem[]>([
-      {icon: 'icon-home', path: 'home', name: '首页'},
+      {icon: 'icon-home', path: 'biz', name: '总览'},
       {icon: 'icon-about', path: 'about', name: '关于' },
     ])
+
+    const filterOption = (input: string, option: any) => {
+      console.log(option, input)
+      return true
+    }
 
     // watch(() => route.path, (value) => {
     //   const url = value.split('/')
@@ -85,14 +107,18 @@ export default {
     // })
 
     return {
+      bizId,
+      bizList,
       ...toRefs(state),
       bar,
+      filterOption,
     }
   }
 }
 </script>
 
 <style scoped lang="less">
+@baseBorder: #DCDEE5;
 .layout {
   width: 100vw;
   height: inherit;
@@ -136,5 +162,13 @@ export default {
   .ant-menu-item-selected a, a:hover {
     color: #1890ff;
   }
+}
+.select-menu-contain {
+  display: flex;
+  justify-content: center;
+  height: 53px;
+  align-items: center;
+  border-bottom: 1px solid @baseBorder;
+  padding: 0 10px;
 }
 </style>
