@@ -1,6 +1,5 @@
 <template>
-<div>home {{ a }}
-  <a-input type="text" v-model:value="b"></a-input>
+<div>
 </div>
 </template>
 
@@ -10,12 +9,9 @@ import {ref} from "vue";
 export default {
   name: "Biz",
   setup() {
-    const a = ref(['/'])
-    const b = ref('home')
+    // const applist
 
     return {
-      a,
-      b,
     }
   }
 }
