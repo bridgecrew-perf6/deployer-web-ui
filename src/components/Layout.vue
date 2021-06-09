@@ -181,6 +181,7 @@ export default {
 .common-content {
   background: #fff;
   border-left: 1px solid #DCDEE5;
+  padding: 20px;
 }
 .layout /deep/ .ant-layout-header {
   height: 58px;

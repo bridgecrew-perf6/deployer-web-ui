@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import {BizResponse, LoginResponse} from "@/utils/response";
+import {BizAppResponse, BizResponse, LoginResponse} from "@/utils/response";
 
 
 const API = '/api/v1'
@@ -12,6 +12,6 @@ export default {
     login: () => request.get<LoginResponse>(`${ApiLogin}`),
 
     getBiz: () => request.get<BizResponse[]>(`${ApiBiz}`),
-    getBizAllApp: (bizId: number) => request.get(`${ApiBiz}/${bizId}/app`),
+    getBizAllApp: (bizId: number) => request.get<BizAppResponse[]>(`${ApiBiz}/${bizId}/app`),
 }
 
