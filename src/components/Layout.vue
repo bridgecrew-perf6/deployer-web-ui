@@ -49,9 +49,10 @@
               v-model:value="bizId"
               show-search
               placeholder="Select a biz"
+              :filter-option="filterOptionBiz"
               style="width: 100%"
           >
-            <a-select-option v-for="option in bizList" :key="option.ID" :value="option.ID">{{ option.Name }}</a-select-option>
+            <a-select-option v-for="option in bizList" :key="option.ID" :value="option.ID" :title="option.Name">{{ option.Name }}</a-select-option>
           </a-select>
         </div>
         <a-menu
@@ -120,6 +121,10 @@ export default {
       localStorage.removeItem('token')
       router.push('/login')
     }
+    const filterOptionBiz = (input: string, option: any) => {
+      console.log(input, option)
+      return option.title.toLowerCase().indexOf(input.toLowerCase()) >= 0
+    }
 
     // watch(() => route.path, (value) => {
     //   const url = value.split('/')
@@ -140,6 +145,7 @@ export default {
       ...toRefs(state),
       bar,
       logout,
+      filterOptionBiz,
     }
   }
 }
