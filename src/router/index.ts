@@ -17,7 +17,10 @@ const routes: Array<RouteRecordRaw> = [
         path: '/cd',
         component: () => import('../components/Layout.vue'),
         children: [
-            {path: 'biz', component: () => import('../views/Biz.vue')},
+            {
+                path: 'biz', component: () => import('../views/Biz.vue'),
+            },
+            {path: 'biz/deploy-template', component: () => import('../views/DeployTemplate.vue')},
             {path: 'about', component: () => import('../views/About.vue')},
         ],
     },
