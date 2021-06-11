@@ -42,7 +42,7 @@ export interface BizAppResponse {
 export interface Cluster {
     Comment?: string;
     CreatedAt?: string;
-    ID?: number;
+    ID: number;
     InstanceTemplate?: InstanceTemplate;
     Name?: string;
     UpdatedAt?: string;
@@ -52,24 +52,24 @@ export interface EnvLogicIdc {
     CreatedAt?: string;
     DisplayName?: string;
     EnvVars?: {[key: string]: string}[];
-    ID?: number;
+    ID: number;
     Name?: string;
     UpdatedAt?: string;
 }
 export interface LogicIdcEnvResponse {
-    Comment: string;
-    CreatedAt: string;
-    Env: EnvLogicIdc;
-    EnvVars: {[key: string]: string}[];
+    Comment?: string;
+    CreatedAt?: string;
+    Env?: EnvLogicIdc;
+    EnvVars?: {[key: string]: string}[];
     ID: number;
-    LogicIdc: EnvLogicIdc;
-    UpdatedAt: string;
+    LogicIdc?: EnvLogicIdc;
+    UpdatedAt?: string;
 }
 export interface AppRsResponse {
-    Cluster: Cluster;
-    CreatedAt: string;
+    Cluster?: Cluster;
+    CreatedAt?: string;
     ID: number;
-    InstanceTemplate: InstanceTemplate;
-    LogicIdcEnv: LogicIdcEnvResponse;
-    UpdatedAt: string;
+    InstanceTemplate?: InstanceTemplate;
+    LogicIdcEnv?: LogicIdcEnvResponse;
+    UpdatedAt?: string;
 }
