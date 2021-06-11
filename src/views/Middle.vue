@@ -19,10 +19,10 @@ export default {
       }
     }
 
-    if (token) {
-      router.push('/cd/biz')
-    } else {
+    if (!token) {
       login()
+    } else {
+      router.push('/cd/biz')
     }
 
     return {
