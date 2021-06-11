@@ -14,8 +14,7 @@
       </template>
       <template #action="{ record }">
         <span>
-          <router-link to="biz/deploy-template">新建发布</router-link>
-          <a>{{record.ID}}</a>
+          <router-link :to="{ path: 'biz/deploy-template', query: { appId: record.ID }}" >新建发布</router-link>
         </span>
       </template>
     </a-table>

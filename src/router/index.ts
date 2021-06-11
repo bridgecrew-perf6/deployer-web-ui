@@ -20,7 +20,15 @@ const routes: Array<RouteRecordRaw> = [
             {
                 path: 'biz', component: () => import('../views/Biz.vue'),
             },
-            {path: 'biz/deploy-template', component: () => import('../views/DeployTemplate.vue')},
+            {
+                path: 'biz/deploy-template', component: () => import('../views/DeployTemplate.vue'),
+            },
+            // {
+            //     path: 'biz/deploy-template/:appId',
+            //     redirect: to => {
+            //         return { path: '/cd/biz/deploy-template', query: {appId: to.params.appId} };
+            //     },
+            // },
             {path: 'about', component: () => import('../views/About.vue')},
         ],
     },
