@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import {BizAppResponse, BizResponse, LoginResponse} from "@/utils/response";
+import {AppRsResponse, BizAppResponse, BizResponse, LoginResponse} from "@/utils/response";
 
 
 const API = '/api/v1'
@@ -15,6 +15,6 @@ export default {
     getBiz: () => request.get<BizResponse[]>(`${ApiBiz}`),
     getBizAllApp: (bizId: number) => request.get<BizAppResponse[]>(`${ApiBiz}/${bizId}/app`),
 
-    getAllClusterByAppId: (appId: number) => request.get(`${ApiApp}/${appId}/cluster`),
+    getAllRsByAppId: (appId: number) => request.get<AppRsResponse[]>(`${ApiApp}/${appId}/rs`),
 }
 

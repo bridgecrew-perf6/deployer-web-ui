@@ -38,3 +38,38 @@ export interface BizAppResponse {
     ReleaseInfo?: {[key: string]: string};
     UpdatedAt?: string;
 }
+
+export interface Cluster {
+    Comment?: string;
+    CreatedAt?: string;
+    ID?: number;
+    InstanceTemplate?: InstanceTemplate;
+    Name?: string;
+    UpdatedAt?: string;
+}
+export interface EnvLogicIdc {
+    Comment?: string;
+    CreatedAt?: string;
+    DisplayName?: string;
+    EnvVars?: {[key: string]: string}[];
+    ID?: number;
+    Name?: string;
+    UpdatedAt?: string;
+}
+export interface LogicIdcEnvResponse {
+    Comment: string;
+    CreatedAt: string;
+    Env: EnvLogicIdc;
+    EnvVars: {[key: string]: string}[];
+    ID: number;
+    LogicIdc: EnvLogicIdc;
+    UpdatedAt: string;
+}
+export interface AppRsResponse {
+    Cluster: Cluster;
+    CreatedAt: string;
+    ID: number;
+    InstanceTemplate: InstanceTemplate;
+    LogicIdcEnv: LogicIdcEnvResponse;
+    UpdatedAt: string;
+}

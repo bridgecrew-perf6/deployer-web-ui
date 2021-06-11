@@ -58,17 +58,21 @@ export default {
     const prev = () => {
       current.value--;
     };
-    const getCluster = async () => {
+    const getRs = async () => {
       try {
         const appId = parseInt((route.query.appId as string), 10)
-        await deployerRepository.getAllClusterByAppId(appId)
+        const data = await deployerRepository.getAllRsByAppId(appId) || []
+        console.log(data, '[[[[ LogicIdc Env Cluster 参数rsId"Targets": [{ReplicaSetID: 1},{ReplicaSetID: 2}')
+        // data.map(d => {
+        //   d.LogicIdcEnv
+        // })
       } catch (e) {
         console.error(e)
       }
     }
 
     onMounted(() => {
-      getCluster()
+      getRs()
     })
 
     return {
