@@ -1,10 +1,11 @@
 <template>
 <div>
-  <div class="biz-title">
-    <p>{{ bizInfo.Name }}</p>
-    <p>{{ bizInfo.DisplayName }}</p>
-    <p>{{ bizInfo.Comment }}</p>
-  </div>
+<!--  <div class="biz-title">-->
+<!--    <p>{{ bizInfo.Name }}</p>-->
+<!--    <p>{{ bizInfo.DisplayName }}</p>-->
+<!--    <p>{{ bizInfo.Comment }}</p>-->
+<!--  </div>-->
+  <CommonHeader :bizInfo="bizInfo" />
   <div>
     <a-table :columns="columns" :data-source="appList" :rowKey="record => record.ID"
              :pagination="pagination" >
@@ -25,9 +26,13 @@
 <script lang="ts">
 import {reactive, ref, toRefs} from "vue";
 import { appState } from "@/utils/store";
+import CommonHeader from "@/components/CommonHeader.vue";
 
 export default {
   name: "Biz",
+  components: {
+    CommonHeader,
+  },
   setup() {
     const { appList, bizInfo } = toRefs(appState)
     const columns = [
@@ -51,13 +56,5 @@ export default {
 </script>
 
 <style scoped lang="less">
-.biz-title {
-  width: fit-content;
-  padding: 10px 20px;
-  box-shadow: #dcdee5 1px 1px 9px 1px inset;
-  margin-bottom: 20px;
-  p {
-    margin: 0;
-  }
-}
+
 </style>

@@ -1,5 +1,6 @@
 <template>
 <div>
+  <CommonHeader :bizInfo="bizInfo" />
   <div>
     <div class="steps-content">
       {{ steps[current].content }}
@@ -23,12 +24,18 @@
 </template>
 
 <script lang="ts">
-import {ref} from "vue";
-import {message} from 'ant-design-vue'
+import {ref, toRefs} from "vue";
+import {message} from 'ant-design-vue';
+import CommonHeader from "@/components/CommonHeader.vue";
+import {appState} from "@/utils/store";
 
 export default {
   name: "DeployTemplate",
+  components: {
+    CommonHeader,
+  },
   setup() {
+    const { bizInfo } = toRefs(appState)
     const current = ref<number>(0);
     const next = () => {
       current.value++;
@@ -37,6 +44,7 @@ export default {
       current.value--;
     };
     return {
+      bizInfo,
       current,
       steps: [
         {
