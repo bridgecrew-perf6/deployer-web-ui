@@ -33,11 +33,12 @@
 </template>
 
 <script lang="ts">
-import {ref, toRefs} from "vue";
+import {onMounted, ref, toRefs} from "vue";
 import {message} from 'ant-design-vue';
 import CommonHeader from "@/components/CommonHeader.vue";
 import {appState} from "@/utils/store";
 import {useRoute} from "vue-router";
+import deployerRepository from "@/api/deployerRepository";
 
 export default {
   name: "DeployTemplate",
@@ -45,27 +46,31 @@ export default {
     CommonHeader,
   },
   setup() {
-    const { bizInfo } = toRefs(appState)
-    const current = ref<number>(0);
-    const steps = [
-      {
-        title: '选择集群',
-      },
-      {
-        title: '选择版本',
-      },
-      {
-        title: 'summary',
-      },
-    ];
     const route = useRoute()
-    console.log(route.query, '[[[[');
+    console.log(route.query.appId, '[[[[')
+    const { bizInfo } = toRefs(appState)
+    const current = ref<number>(0)
+    const steps = [{ title: '选择集群', }, { title: '选择版本', }, { title: 'summary', },]
+
     const next = () => {
       current.value++;
     };
     const prev = () => {
       current.value--;
     };
+    const getCluster = async () => {
+      try {
+        const appId = parseInt((route.query.appId as string), 10)
+        await deployerRepository.getAllClusterByAppId(appId)
+      } catch (e) {
+        console.error(e)
+      }
+    }
+
+    onMounted(() => {
+      getCluster()
+    })
+
     return {
       bizInfo,
       current,
