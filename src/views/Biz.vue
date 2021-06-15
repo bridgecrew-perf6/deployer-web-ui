@@ -18,7 +18,7 @@
             <router-link :to="{ path: 'biz/deploy-template', query: { appId: record.ID }}" >新建发布</router-link>
           </span>
           <span>
-            <router-link :to="{ path: 'biz/deploy-list', query: { appId: record.ID }}" >发布详情</router-link>
+            <router-link :to="{ path: 'biz/deploy-list', query: { appId: record.ID }}" >发布列表</router-link>
           </span>
         </div>
       </template>
