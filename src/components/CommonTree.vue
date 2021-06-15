@@ -4,13 +4,14 @@
       <li v-if="node.children">
         <CaretDownOutlined :style="{fontSize: '12px'}" v-if="node.expanded" @click="isExpandedChildren(node)" />
         <CaretRightOutlined :style="{fontSize: '12px'}" v-else @click="isExpandedChildren(node)"  />
-        <a-checkbox v-if="node.checked" v-model:checked="node.selected"></a-checkbox>
+        <a-checkbox :disabled="disabled" v-if="node.checked" v-model:checked="node.selected"></a-checkbox>
         <span>{{node.title}}</span>
-        <common-tree v-if="node.expanded" :nodes-data="node.children" ></common-tree>
+        <common-tree v-if="node.expanded" :nodes-data="node.children" :disabled="disabled"></common-tree>
       </li>
       <template v-else>
         <li >
-          <a-checkbox @change="clusterBindLogicIdcEnv(node)" v-if="node.checked" v-model:checked="node.selected"></a-checkbox>
+<!--          <a-checkbox :disabled="disabled" @change="clusterBindLogicIdcEnv(node)" v-if="node.checked" v-model:checked="node.selected"></a-checkbox>-->
+          <a-checkbox :disabled="disabled" v-if="node.checked" v-model:checked="node.selected"></a-checkbox>
           <span>{{node.title}}</span>
         </li>
       </template>
@@ -31,20 +32,24 @@ export default {
     nodesData: {
       type: Array,
       default: () => [],
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     }
   },
   setup() {
     const isExpandedChildren = (value: any) => {
-      console.log(value, 'expand')
+      // console.log(value, 'expand')
       value.expanded = !value.expanded
     }
-    const clusterBindLogicIdcEnv = (value: any) => {
-      console.log(value, 'select')
-    }
+    // const clusterBindLogicIdcEnv = (value: any) => {
+    //   console.log(value, 'select')
+    // }
 
     return {
       isExpandedChildren,
-      clusterBindLogicIdcEnv,
+      // clusterBindLogicIdcEnv,
     }
   }
 }

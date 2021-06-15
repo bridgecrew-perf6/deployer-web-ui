@@ -7,11 +7,36 @@
       <div v-if="current === 0" class="steps-content-content">
         <CommonTree :nodes-data="nodeTreeData"/>
       </div>
-      <div v-else-if="current === 1">
-        xxx
+      <div v-else-if="current === 1" class="steps-content-content">
+<!--        <a-form :model="state" layout="inline">-->
+<!--          <a-form-item>-->
+<!--            <span>目标 : </span>-->
+<!--          </a-form-item>-->
+<!--          <a-form-item label="版本" :colon="false">-->
+<!--            <a-input v-model:value="state.TargetVersion" placeholder="输入版本" />-->
+<!--          </a-form-item>-->
+<!--          <a-form-item label="release 号" :colon="false">-->
+<!--            <a-input v-model:value="state.TargetRelease" placeholder="输入release号" />-->
+<!--          </a-form-item>-->
+<!--        </a-form>-->
+<!--        <a-form :model="state" layout="inline">-->
+<!--          <a-form-item>-->
+<!--            <span>当前 : </span>-->
+<!--          </a-form-item>-->
+<!--          <a-form-item label="版本" :colon="false">-->
+<!--            <a-input v-model:value="state.CurrentVersion" placeholder="输入版本" />-->
+<!--          </a-form-item>-->
+<!--          <a-form-item label="release 号" :colon="false">-->
+<!--            <a-input v-model:value="state.CurrentRelease" placeholder="输入release号"/>-->
+<!--          </a-form-item>-->
+<!--        </a-form>-->
+        <CommonForm :form-state="state" />
       </div>
-      <div v-else>
-        lll
+      <div v-else class="steps-content-content">
+        <CommonTree :nodes-data="nodeTreeData" :disabled="true" />
+        <div style="margin-top: 20px">
+          <CommonForm :form-state="state" :disabled="true" />
+        </div>
       </div>
     </div>
     <a-steps :current="current">
@@ -33,13 +58,14 @@
 </template>
 
 <script lang="ts">
-import {onMounted, ref, toRefs} from "vue";
+import {onMounted, reactive, ref, toRefs} from "vue";
 import {message} from 'ant-design-vue';
 import CommonHeader from "@/components/CommonHeader.vue";
 import {appState} from "@/utils/store";
 import {useRoute} from "vue-router";
 import deployerRepository from "@/api/deployerRepository";
 import CommonTree from "@/components/CommonTree.vue";
+import CommonForm from '@/components/CommonForm.vue';
 
 export interface NodeTree {
   id?: number;
@@ -56,6 +82,7 @@ export default {
   components: {
     CommonHeader,
     CommonTree,
+    CommonForm,
   },
   setup() {
     const route = useRoute()
@@ -64,14 +91,30 @@ export default {
     const current = ref<number>(0)
     const steps = [{ title: '选择集群', }, { title: '选择版本', }, { title: 'summary', },]
     const nodeTreeData = ref()
+    const state = reactive({
+      Comment: '',
+      CurrentRelease: undefined,
+      CurrentVersion: '',
+      TargetRelease: undefined,
+      TargetVersion: '',
+      Targets: [],
+    })
 
     const next = () => {
-      const selected = nodeTreeData.value.reduce((pre: any, cur: NodeTree) => {
-        return pre.concat(cur?.children?.reduce((p: any, c: NodeTree) => p.concat(c.children), []))
-      }, [])
-      const ids = selected.filter((s: NodeTree) => s.selected).map((m: NodeTree) => m.id)
-      console.log(selected, '//////', ids)
-      // current.value++;
+      if (current.value === 0) {
+        const selected = nodeTreeData.value.reduce((pre: any, cur: NodeTree) => {
+          return pre.concat(cur?.children?.reduce((p: any, c: NodeTree) => p.concat(c.children), []))
+        }, [])
+        state.Targets = selected.filter((s: NodeTree) => s.selected).map((m: NodeTree) => ({ReplicaSetID: m.id}))
+        console.log(selected, '//////', state.Targets)
+      }
+      if (current.value === 1) {
+        if (!state.TargetVersion) {
+          message.warning('目标版本必填')
+          return
+        }
+      }
+      current.value++;
     };
     const prev = () => {
       current.value--;
@@ -121,6 +164,7 @@ export default {
     })
 
     return {
+      state,
       nodeTreeData,
       bizInfo,
       current,
