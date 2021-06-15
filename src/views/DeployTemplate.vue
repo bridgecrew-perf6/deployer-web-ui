@@ -182,9 +182,8 @@ export default {
       value.TargetRelease = Number(value.TargetRelease) || 0
       const appId = parseInt((route.query.appId as string), 10)
       try {
-        const data = await deployerRepository.addDeploymentByAppId(appId, value)
-        console.log(data, '[[[')
-        message.success('Processing complete!')
+        await deployerRepository.addDeploymentByAppId(appId, value)
+        message.success('success!')
       } catch (e) {
         console.error(e)
       }
