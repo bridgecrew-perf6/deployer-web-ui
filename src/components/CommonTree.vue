@@ -36,6 +36,7 @@ export default {
   setup() {
     const isExpandedChildren = (value: any) => {
       console.log(value, 'expand')
+      value.expanded = !value.expanded
     }
     const clusterBindLogicIdcEnv = (value: any) => {
       console.log(value, 'select')

@@ -66,7 +66,12 @@ export default {
     const nodeTreeData = ref()
 
     const next = () => {
-      current.value++;
+      const selected = nodeTreeData.value.reduce((pre: any, cur: NodeTree) => {
+        return pre.concat(cur?.children?.reduce((p: any, c: NodeTree) => p.concat(c.children), []))
+      }, [])
+      const ids = selected.filter((s: NodeTree) => s.selected).map((m: NodeTree) => m.id)
+      console.log(selected, '//////', ids)
+      // current.value++;
     };
     const prev = () => {
       current.value--;
