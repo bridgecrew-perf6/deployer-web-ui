@@ -44,7 +44,7 @@
       <a-step v-for="item in steps" :key="item.title" :title="item.title" />
     </a-steps>
     <div class="steps-action">
-      <a-button v-if="current < steps.length - 1" type="primary" @click="next">Next</a-button>
+      <a-button v-if="current > 0" style="margin-right: 8px" @click="prev">Previous</a-button>
       <a-button
           v-if="current === steps.length - 1"
           type="primary"
@@ -52,7 +52,7 @@
       >
         Done
       </a-button>
-      <a-button v-if="current > 0" style="margin-left: 8px" @click="prev">Previous</a-button>
+      <a-button v-if="current < steps.length - 1" type="primary" @click="next">Next</a-button>
     </div>
   </div>
 </div>
@@ -79,9 +79,9 @@ export interface NodeTree {
 }
 export interface FormState {
   Comment: string;
-  CurrentRelease: number | undefined;
+  CurrentRelease: number;
   CurrentVersion: string;
-  TargetRelease: number | undefined;
+  TargetRelease: number;
   TargetVersion: string;
   Targets: {[key: string]: number}[],
 }
@@ -102,9 +102,9 @@ export default {
     const nodeTreeData = ref()
     const state: UnwrapRef<FormState> = reactive({
       Comment: '',
-      CurrentRelease: undefined,
+      CurrentRelease: 0,
       CurrentVersion: '',
-      TargetRelease: undefined,
+      TargetRelease: 0,
       TargetVersion: '',
       Targets: [],
     })
@@ -115,7 +115,7 @@ export default {
           return pre.concat(cur?.children?.reduce((p: any, c: NodeTree) => p.concat(c.children), []))
         }, [])
         state.Targets = selected.filter((s: NodeTree) => s.selected).map((m: NodeTree) => ({ReplicaSetID: m.id}))
-        console.log(selected, '//////', state.Targets)
+        // console.log(selected, '//////', state.Targets)
       }
       if (current.value === 1) {
         if (!state.TargetVersion) {
@@ -142,8 +142,8 @@ export default {
         const data = await deployerRepository.getAllRsByAppId(appId) || []
         console.log(data, '[[[[ LogicIdc Env Cluster 参数rsId"Targets": [{ReplicaSetID: 1},{ReplicaSetID: 2}')
         const logicIdc = data.map(d => JSON.stringify({
-          title: d.LogicIdcEnv.LogicIdc.Name,
-          key: d.LogicIdcEnv.LogicIdc.ID,
+          title: d.LogicIdcEnv?.LogicIdc?.Name,
+          key: d.LogicIdcEnv?.LogicIdc?.ID,
           expanded: true,
           children: [],
         }))
