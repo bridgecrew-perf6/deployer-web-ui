@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <div class="login-admin">
-      <h2>通过 SSO 登录 TOOLBOX</h2>
+      <h2>通过 SSO 登录 DEPLOY</h2>
       <a-button size="large" type="primary" @click="login">登录</a-button>
     </div>
   </div>

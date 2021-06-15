@@ -34,9 +34,10 @@
       </div>
       <div v-else class="steps-content-content">
         <CommonTree :nodes-data="nodeTreeData" :disabled="true" />
-        <div style="margin-top: 20px">
+        <div style="margin-top: 20px; margin-bottom: 20px;">
           <CommonForm :form-state="state" :disabled="true" />
         </div>
+        <a-textarea v-model:value="state.Comment" auto-size placeholder="请输入备注" :rows="1" />
       </div>
     </div>
     <a-steps :current="current">
@@ -47,7 +48,7 @@
       <a-button
           v-if="current === steps.length - 1"
           type="primary"
-          @click="message.success('Processing complete!')"
+          @click="addDeployment"
       >
         Done
       </a-button>
@@ -58,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import {onMounted, reactive, ref, toRefs} from "vue";
+import {onMounted, reactive, ref, toRefs, UnwrapRef} from "vue";
 import {message} from 'ant-design-vue';
 import CommonHeader from "@/components/CommonHeader.vue";
 import {appState} from "@/utils/store";
@@ -76,6 +77,14 @@ export interface NodeTree {
   selected?: boolean;
   children?: NodeTree[],
 }
+export interface FormState {
+  Comment: string;
+  CurrentRelease: number | undefined;
+  CurrentVersion: string;
+  TargetRelease: number | undefined;
+  TargetVersion: string;
+  Targets: {[key: string]: number}[],
+}
 
 export default {
   name: "DeployTemplate",
@@ -91,7 +100,7 @@ export default {
     const current = ref<number>(0)
     const steps = [{ title: '选择集群', }, { title: '选择版本', }, { title: 'summary', },]
     const nodeTreeData = ref()
-    const state = reactive({
+    const state: UnwrapRef<FormState> = reactive({
       Comment: '',
       CurrentRelease: undefined,
       CurrentVersion: '',
@@ -111,6 +120,14 @@ export default {
       if (current.value === 1) {
         if (!state.TargetVersion) {
           message.warning('目标版本必填')
+          return
+        }
+        if (state.TargetRelease && isNaN(state.TargetRelease)) {
+          message.warning('release为整数')
+          return
+        }
+        if (state.CurrentRelease && isNaN(state.CurrentRelease)) {
+          message.warning('release为整数')
           return
         }
       }
@@ -159,6 +176,20 @@ export default {
       }
     }
 
+    const addDeployment = async () => {
+      const value: any = {...state}
+      value.CurrentRelease = Number(value.CurrentRelease) || 0
+      value.TargetRelease = Number(value.TargetRelease) || 0
+      const appId = parseInt((route.query.appId as string), 10)
+      try {
+        const data = await deployerRepository.addDeploymentByAppId(appId, value)
+        console.log(data, '[[[')
+        message.success('Processing complete!')
+      } catch (e) {
+        console.error(e)
+      }
+    }
+
     onMounted(() => {
       getRs()
     })
@@ -171,7 +202,7 @@ export default {
       steps,
       next,
       prev,
-      message,
+      addDeployment,
     };
   }
 }
