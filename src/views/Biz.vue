@@ -13,9 +13,14 @@
         <a>{{ text }}</a>
       </template>
       <template #action="{ record }">
-        <span>
-          <router-link :to="{ path: 'biz/deploy-template', query: { appId: record.ID }}" >新建发布</router-link>
-        </span>
+        <div style="display: flex; justify-content: space-around">
+          <span>
+            <router-link :to="{ path: 'biz/deploy-template', query: { appId: record.ID }}" >新建发布</router-link>
+          </span>
+          <span>
+            <router-link :to="{ path: 'biz/deploy-list', query: { appId: record.ID }}" >发布详情</router-link>
+          </span>
+        </div>
       </template>
     </a-table>
   </div>
@@ -38,7 +43,7 @@ export default {
       { dataIndex: 'Name', key: 'Name', title: '名字',},
       { dataIndex: 'DisplayName', key: 'DisplayName', title: '显示名',},
       { dataIndex: 'Level', key: 'Level', title: '级别'},
-      { title: '操作', key: 'action', slots: { customRender: 'action' },},
+      { title: '操作', key: 'action', slots: { customRender: 'action' }, align: 'center'},
     ];
     const pagination = reactive({
       showSizeChanger: true

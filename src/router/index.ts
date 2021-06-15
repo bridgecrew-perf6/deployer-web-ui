@@ -23,6 +23,9 @@ const routes: Array<RouteRecordRaw> = [
             {
                 path: 'biz/deploy-template', component: () => import('../views/DeployTemplate.vue'),
             },
+            {
+                path: 'biz/deploy-list', component: () => import('../views/DeployList.vue'),
+            },
             // {
             //     path: 'biz/deploy-template/:appId',
             //     redirect: to => {
