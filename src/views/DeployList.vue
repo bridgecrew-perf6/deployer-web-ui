@@ -33,7 +33,7 @@ export default {
   setup() {
     const route = useRoute()
     const { appInfo } = toRefs(appState)
-    console.log(route.query.appId, '[[[[', appInfo)
+    // console.log(route.query.appId, '[[[[', appInfo)
     const columns = [
       { dataIndex: 'target_version', key: 'target_version', title: '目标版本'},
       { dataIndex: 'current_version', key: 'current_version', title: '当前版本' },
