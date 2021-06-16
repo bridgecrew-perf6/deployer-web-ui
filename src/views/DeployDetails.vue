@@ -1,6 +1,6 @@
 <template>
 <div>
-  <CommonHeader :info="appInfo"/>
+  <CommonHeader :info="appInfo" />
   <div class="deploy-title">
     <ul>
       <li><span>版本号：{{ deploymentInfo.target_version }}</span></li>
