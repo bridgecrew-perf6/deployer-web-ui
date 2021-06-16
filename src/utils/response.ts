@@ -35,7 +35,7 @@ export interface BizAppResponse {
     Comment?: string;
     CreatedAt?: string;
     DisplayName?: string;
-    ID?: number;
+    ID: number;
     InstanceTemplate?: InstanceTemplate;
     Level?: string;
     Name?: string;
@@ -84,7 +84,7 @@ export interface Targets {
     Instances?: InstanceTemplate[]
     LogicIDCEnvID?: number;
     LogicIDCName?: string;
-    ReplicaSetID?: number;
+    ReplicaSetID: number;
     SaltMasterHostID?: number;
     SaltMasterHostInnerIP?: string;
 }

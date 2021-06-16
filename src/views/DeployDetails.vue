@@ -19,7 +19,7 @@ import {appState} from "@/utils/store";
 import CommonHeader from "@/components/CommonHeader.vue";
 import deployerRepository from "@/api/deployerRepository";
 import {useRoute} from "vue-router";
-import {DeploymentResponse} from "@/utils/response";
+import {AppRsResponse, DeploymentResponse, Targets} from "@/utils/response";
 import moment from "moment";
 
 export interface Deploy {
@@ -44,12 +44,20 @@ export default {
     const queryDeploy = async () => {
       try {
         stateDeploy.deploymentInfo = await deployerRepository.queryDeployByDid(stateDeploy.deploymentId)
+        const data = await queryRsByRsId()
+        const rsIds = stateDeploy.deploymentInfo?.targets?.map((t: Targets) => t.ReplicaSetID) || []
+        const rsData = data.filter((d: AppRsResponse) => rsIds.includes(d.ID))
+
+        console.log(data, ';;;;;', rsIds, rsData)
       } catch (e) {
         console.error(e)
       }
     }
     const timeFormat = (value: string) => {
       return moment(value).format('YYYY-MM-DD HH:mm:ss')
+    }
+    const queryRsByRsId = async () => {
+      return await deployerRepository.getAllRsByAppId(appInfo.value.ID)
     }
 
     onMounted(() => {
