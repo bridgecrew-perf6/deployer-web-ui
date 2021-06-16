@@ -14,7 +14,7 @@ export default {
 
     getBiz: () => request.get<BizResponse[]>(`${ApiBiz}`),
     getBizAllApp: (bizId: number) => request.get<BizAppResponse[]>(`${ApiBiz}/${bizId}/app`),
-
+    getAppByAppId: (appId: number) => request.get<BizAppResponse>(`${ApiApp}/${appId}`),
     getAllRsByAppId: (appId: number) => request.get<AppRsResponse[]>(`${ApiApp}/${appId}/rs`),
 
     addDeploymentByAppId: (appId: number, params: any) => request.post(`${ApiApp}/${appId}/deployment`, params),
