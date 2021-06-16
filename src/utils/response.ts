@@ -9,13 +9,17 @@ export interface BindInfos {
     Protocol?: string;
 }
 export interface InstanceTemplate {
-    BindInfos: BindInfos[];
+    BindInfos?: BindInfos[];
     DataDir?: string;
     EnvVars: {[key: string]: string}[]
     LogDir?: string;
     MetricEndpoint?: string;
     User?: string;
     WorkDir?: string;
+    HostID?: number;
+    HostInnerIP?: string;
+    ID?: number;
+    Name?: string;
 }
 
 export interface BizResponse {
@@ -72,4 +76,43 @@ export interface AppRsResponse {
     InstanceTemplate?: InstanceTemplate;
     LogicIdcEnv?: LogicIdcEnvResponse;
     UpdatedAt?: string;
+}
+
+export interface Targets {
+    ClusterName?: string;
+    EnvName?: string;
+    Instances?: InstanceTemplate[]
+    LogicIDCEnvID?: number;
+    LogicIDCName?: string;
+    ReplicaSetID?: number;
+    SaltMasterHostID?: number;
+    SaltMasterHostInnerIP?: string;
+}
+export interface DeploymentResponse {
+    app_display_name?: string;
+    app_id?: number;
+    app_name?: string;
+    comment?: string;
+    create_by_username?: string;
+    created_at?: string;
+    created_by_user_id?: number;
+    current_version?: string;
+    id?: number;
+    release_info?: {[key: string]: string};
+    result?: string;
+    state?: string;
+    target_version?: string;
+    targets?: Targets[];
+    task_id?: string;
+    template_id?: string;
+    updated_at?: string;
+    updated_by_username?: string;
+}
+export interface Page {
+    content: DeploymentResponse[];
+    number: number;
+    numberOfElements: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
 }

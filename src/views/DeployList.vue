@@ -1,7 +1,19 @@
 <template>
 <div>
   <CommonHeader :bizInfo="bizInfo" />
-  <div></div>
+  <div>
+    <a-table :columns="columns" :data-source="deployData" :pagination="pagination" :rowKey="record => record.id">
+      <template #name="{ text }">
+        <a>{{ text }}</a>
+      </template>
+      <template #action="{ record }">
+        <span>
+<!--          <router-link :to="{ path: '/biz/deploy-details', query: { deploymentId: record.id } }">发布详情</router-link>-->
+          <router-link :to="{ path: 'deploy-details', query: { deploymentId: record.id } }">发布详情</router-link>
+        </span>
+      </template>
+    </a-table>
+  </div>
 </div>
 </template>
 
@@ -9,8 +21,9 @@
 import {useRoute} from "vue-router";
 import CommonHeader from "@/components/CommonHeader.vue";
 import {appState} from "@/utils/store";
-import {onMounted, toRefs} from "vue";
+import {onMounted, reactive, ref, toRefs} from "vue";
 import deployerRepository from "@/api/deployerRepository";
+import {DeploymentResponse} from "@/utils/response";
 
 export default {
   name: "DeployList",
@@ -19,11 +32,27 @@ export default {
   },
   setup() {
     const route = useRoute()
-    console.log(route.query.appId, '[[[[')
+    // console.log(route.query.appId, '[[[[')
     const { bizInfo } = toRefs(appState)
+    const columns = [
+      { dataIndex: 'target_version', key: 'target_version', title: '目标版本'},
+      { dataIndex: 'current_version', key: 'current_version', title: '当前版本' },
+      { dataIndex: 'app_name', key: 'app_name', title: '应用名' },
+      { dataIndex: 'app_display_name', key: 'app_display_name', title: '应用显示名' },
+      { dataIndex: 'state', key: 'state', title: '状态' },
+      { dataIndex: 'comment', key: 'comment', title: '备注' },
+      { dataIndex: 'template_id', key: 'template_id', title: '模板ID' },
+      { title: '操作', key: 'action', slots: { customRender: 'action' }, align: 'center'},
+    ]
+    const pagination = reactive({
+      showSizeChanger: true
+    })
+    const deployData = ref<DeploymentResponse[]>([])
+
     const getDeploymentList = async () => {
       const appId = parseInt((route.query.appId as string), 10)
       const data = await deployerRepository.deploymentList(appId)
+      deployData.value = data.content
     }
 
     onMounted(() => {
@@ -32,6 +61,9 @@ export default {
 
     return {
       bizInfo,
+      columns,
+      deployData,
+      pagination,
     }
   }
 }

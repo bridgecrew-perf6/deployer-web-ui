@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-import {AppRsResponse, BizAppResponse, BizResponse, LoginResponse} from "@/utils/response";
+import {AppRsResponse, BizAppResponse, BizResponse, LoginResponse, Page} from "@/utils/response";
 
 
 const API = '/api/v1'
@@ -18,6 +18,6 @@ export default {
     getAllRsByAppId: (appId: number) => request.get<AppRsResponse[]>(`${ApiApp}/${appId}/rs`),
 
     addDeploymentByAppId: (appId: number, params: any) => request.post(`${ApiApp}/${appId}/deployment`, params),
-    deploymentList: (appId: number) => request.get(`${ApiApp}/${appId}/deployment`),
+    deploymentList: (appId: number) => request.get<Page>(`${ApiApp}/${appId}/deployment`),
 }
 
