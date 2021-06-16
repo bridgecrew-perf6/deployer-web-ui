@@ -10,6 +10,29 @@
       <li><a-button>操作历史</a-button></li>
     </ul>
   </div>
+  <div>
+    <a-table :columns="columns" bordered :data-source="rsData" :pagination="pagination" :rowKey="record => record.ID">
+      <template #name="{ text }">
+        <a>{{ text }}</a>
+      </template>
+      <template #Name="{ text }">
+        <span>{{ text.Name }}</span>
+      </template>
+      <template #logic="{ record }">
+        <span> {{ record.LogicIdcEnv.LogicIdc.Name }}</span>
+      </template>
+      <template #env="{ record }">
+        <span> {{ record.LogicIdcEnv.Env.Name }}</span>
+      </template>
+      <template #action="{ record }">
+        <div>
+          <span>
+          <a >{{ record.ID }}</a>
+          </span>
+        </div>
+      </template>
+    </a-table>
+  </div>
 </div>
 </template>
 
@@ -25,6 +48,7 @@ import moment from "moment";
 export interface Deploy {
   deploymentInfo: DeploymentResponse;
   deploymentId: number;
+  rsData: AppRsResponse[];
 }
 
 export default {
@@ -38,7 +62,27 @@ export default {
     const { appInfo } = toRefs(appState)
     const stateDeploy: UnwrapRef<Deploy> = reactive({
       deploymentInfo: {},
-      deploymentId: parseInt((route.query.deploymentId as string), 10)
+      deploymentId: parseInt((route.query.deploymentId as string), 10),
+      rsData: [],
+    })
+    const columns = [
+      { dataIndex: 'ID', key: 'ID', title: 'ID' },
+      { dataIndex: 'Cluster', key: 'Cluster', slots: { customRender: 'Name' }, title: '集群名' },
+      {
+        dataIndex: 'LogicIdcEnv', key: 'LogicIdcEnv', title: '机房环境',
+        children: [
+          {title: '机房', key: 'LogicIdc', dataIndex: 'LogicIdc',
+            slots: { customRender: 'logic' }, align: 'center',
+          },
+          {title: '环境', key: 'Env', dataIndex: 'Env',
+            slots: { customRender: 'env' }, align: 'center',
+          }
+        ],
+      },
+      { title: '操作', key: 'action', slots: { customRender: 'action' }, align: 'center'},
+    ]
+    const pagination = reactive({
+      showSizeChanger: true
     })
 
     const queryDeploy = async () => {
@@ -46,9 +90,9 @@ export default {
         stateDeploy.deploymentInfo = await deployerRepository.queryDeployByDid(stateDeploy.deploymentId)
         const data = await queryRsByRsId()
         const rsIds = stateDeploy.deploymentInfo?.targets?.map((t: Targets) => t.ReplicaSetID) || []
-        const rsData = data.filter((d: AppRsResponse) => rsIds.includes(d.ID))
+        stateDeploy.rsData = data.filter((d: AppRsResponse) => rsIds.includes(d.ID))
 
-        console.log(data, ';;;;;', rsIds, rsData)
+        console.log(data, ';;;;;', rsIds, stateDeploy.rsData)
       } catch (e) {
         console.error(e)
       }
@@ -65,6 +109,8 @@ export default {
     })
 
     return {
+      pagination,
+      columns,
       appInfo,
       ...toRefs(stateDeploy),
       timeFormat,
