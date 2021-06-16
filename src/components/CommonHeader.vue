@@ -1,8 +1,8 @@
 <template>
   <div class="biz-title">
-    <p>{{ bizInfo.Name }}</p>
-    <p>{{ bizInfo.DisplayName }}</p>
-    <p>{{ bizInfo.Comment }}</p>
+    <p>{{ info.Name }}</p>
+    <p>{{ info.DisplayName }}</p>
+    <p>{{ info.Comment }}</p>
   </div>
 </template>
 
@@ -10,7 +10,7 @@
 export default {
   name: "CommonHeader",
   props: {
-    bizInfo: Object,
+    info: Object,
   },
   setup() {
     return {}

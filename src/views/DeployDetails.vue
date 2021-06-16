@@ -1,6 +1,6 @@
 <template>
 <div>
-  <CommonHeader :bizInfo="bizInfo"/>
+  <CommonHeader :info="appInfo"/>
 </div>
 </template>
 
@@ -15,10 +15,10 @@ export default {
     CommonHeader,
   },
   setup() {
-    const { bizInfo } = toRefs(appState)
+    const { appInfo } = toRefs(appState)
 
     return {
-      bizInfo,
+      appInfo,
     }
   }
 }

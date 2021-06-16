@@ -1,6 +1,6 @@
 <template>
 <div>
-  <CommonHeader :bizInfo="bizInfo" />
+  <CommonHeader :info="appInfo" />
   <div>
     <a-table :columns="columns" :data-source="deployData" :pagination="pagination" :rowKey="record => record.id">
       <template #name="{ text }">
@@ -33,7 +33,7 @@ export default {
   setup() {
     const route = useRoute()
     // console.log(route.query.appId, '[[[[')
-    const { bizInfo } = toRefs(appState)
+    const { appInfo } = toRefs(appState)
     const columns = [
       { dataIndex: 'target_version', key: 'target_version', title: '目标版本'},
       { dataIndex: 'current_version', key: 'current_version', title: '当前版本' },
@@ -60,7 +60,7 @@ export default {
     })
 
     return {
-      bizInfo,
+      appInfo,
       columns,
       deployData,
       pagination,

@@ -1,6 +1,6 @@
 <template>
 <div>
-  <CommonHeader :bizInfo="bizInfo" />
+  <CommonHeader :info="appInfo" />
   <div>
     <div class="steps-content">
       <div class="steps-content-title">{{ steps[current].title }}</div>
@@ -96,7 +96,7 @@ export default {
   setup() {
     const route = useRoute()
     console.log(route.query.appId, '[[[[')
-    const { bizInfo } = toRefs(appState)
+    const { appInfo } = toRefs(appState)
     const current = ref<number>(0)
     const steps = [{ title: '选择集群', }, { title: '选择版本', }, { title: 'summary', },]
     const nodeTreeData = ref()
@@ -196,7 +196,7 @@ export default {
     return {
       state,
       nodeTreeData,
-      bizInfo,
+      appInfo,
       current,
       steps,
       next,

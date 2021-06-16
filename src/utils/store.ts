@@ -7,4 +7,5 @@ export const bizInfo = ref()
 export const appState = reactive({
   appList: [] as BizAppResponse[],
   bizInfo: {} as BizResponse,
+  appInfo: {} as BizAppResponse,
 })
