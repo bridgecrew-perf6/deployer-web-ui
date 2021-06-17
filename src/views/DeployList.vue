@@ -1,6 +1,6 @@
 <template>
 <div>
-  <CommonHeader :info="appInfo" />
+  <CommonHeader :app-id="appId" />
   <div>
     <a-table :columns="columns" :data-source="deployData" :pagination="pagination" :rowKey="record => record.id">
       <template #name="{ text }">
@@ -9,7 +9,7 @@
       <template #action="{ record }">
         <span>
 <!--          <router-link :to="{ path: '/biz/deploy-details', query: { deploymentId: record.id } }">发布详情</router-link>-->
-          <router-link :to="{ path: 'deploy-details', query: { deploymentId: record.id } }">发布详情</router-link>
+          <router-link :to="{ path: `deploy-list/${record.id}/details`, query: { deploymentId: record.id } }">发布详情</router-link>
         </span>
       </template>
     </a-table>
@@ -32,7 +32,8 @@ export default {
   },
   setup() {
     const route = useRoute()
-    const { appInfo } = toRefs(appState)
+    const appId = ref(parseInt(route.query.appId as string, 10))
+    // const { appInfo } = toRefs(appState)
     // console.log(route.query.appId, '[[[[', appInfo)
     const columns = [
       { dataIndex: 'target_version', key: 'target_version', title: '目标版本'},
@@ -60,7 +61,7 @@ export default {
     })
 
     return {
-      appInfo,
+      appId,
       columns,
       deployData,
       pagination,

@@ -1,19 +1,36 @@
 <template>
   <div class="biz-title">
-    <p>{{ info.Name }}</p>
-    <p>{{ info.DisplayName }}</p>
-    <p>{{ info.Comment }}</p>
+    <div v-if="info">
+      <p>{{ info.Name }}</p>
+      <p>{{ info.DisplayName }}</p>
+      <p>{{ info.Comment }}</p>
+    </div>
+    <div v-else>
+      <p>{{ appInfo?.Name }}</p>
+      <p>{{ appInfo?.DisplayName }}</p>
+      <p>{{ appInfo?.Comment }}</p>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
+import appInfoRepositories from "@/composable/appInfoRepositories";
+
 export default {
   name: "CommonHeader",
   props: {
     info: Object,
+    appId: {
+      type: Number,
+      default: 0,
+    }
   },
-  setup() {
-    return {}
+  setup(props: any) {
+    const { appInfo } = appInfoRepositories(props.appId)
+
+    return {
+      appInfo,
+    }
   }
 }
 </script>

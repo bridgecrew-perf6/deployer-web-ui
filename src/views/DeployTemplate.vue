@@ -6,7 +6,7 @@
 <!--      <h1>Loading...</h1>-->
 <!--    </template>-->
 <!--  </Suspense>-->
-  <CommonHeader :info="appInfo" />
+  <CommonHeader :app-id="appId" />
   <div>
     <div class="steps-content">
       <div class="steps-content-title">{{ steps[current].title }}</div>
@@ -102,7 +102,8 @@ export default {
   setup() {
     const route = useRoute()
     // console.log(route.query.appId, '[[[[')
-    const { appInfo } = toRefs(appState)
+    // const { appInfo } = toRefs(appState)
+    const appId = ref(parseInt(route.query.appId as string, 10))
     const current = ref<number>(0)
     const steps = [{ title: '选择集群', }, { title: '选择版本', }, { title: 'summary', },]
     const nodeTreeData = ref()
@@ -202,7 +203,7 @@ export default {
     return {
       state,
       nodeTreeData,
-      appInfo,
+      appId,
       current,
       steps,
       next,

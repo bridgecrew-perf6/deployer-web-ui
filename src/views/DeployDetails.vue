@@ -1,6 +1,6 @@
 <template>
 <div>
-  <CommonHeader :info="appInfo" />
+  <CommonHeader :app-id="appId" />
   <div class="deploy-title">
     <ul>
       <li><span>版本号：{{ deploymentInfo.target_version }}</span></li>
@@ -61,8 +61,9 @@ export default {
   },
   setup() {
     const route = useRoute()
-    console.log(route.query.deploymentId)
-    const { appInfo } = toRefs(appState)
+    console.log(route.query.deploymentId, route.params.appId)
+    // const { appInfo } = toRefs(appState)
+    const appId = ref(parseInt(route.params.appId as string, 10))
     const stateDeploy: UnwrapRef<Deploy> = reactive({
       deploymentInfo: {},
       deploymentId: parseInt((route.query.deploymentId as string), 10),
@@ -90,7 +91,7 @@ export default {
     const queryDeploy = async () => {
       try {
         stateDeploy.deploymentInfo = await deployerRepository.queryDeployByDid(stateDeploy.deploymentId)
-        const data = await queryRsByRsId()
+        const data = await queryRsByRsId() || []
         const rsIds = stateDeploy.deploymentInfo?.targets?.map((t: Targets) => t.ReplicaSetID) || []
         stateDeploy.rsData = data.filter((d: AppRsResponse) => rsIds.includes(d.ID))
 
@@ -103,7 +104,7 @@ export default {
       return moment(value).format('YYYY-MM-DD HH:mm:ss')
     }
     const queryRsByRsId = async () => {
-      return await deployerRepository.getAllRsByAppId(appInfo.value.ID)
+      return await deployerRepository.getAllRsByAppId(appId.value)
     }
 
     const rollBack = async (record: AppRsResponse) => {
@@ -129,7 +130,7 @@ export default {
     return {
       pagination,
       columns,
-      appInfo,
+      appId,
       ...toRefs(stateDeploy),
       timeFormat,
       rollBack,

@@ -5,7 +5,7 @@
 <!--    <p>{{ bizInfo.DisplayName }}</p>-->
 <!--    <p>{{ bizInfo.Comment }}</p>-->
 <!--  </div>-->
-  <CommonHeader :info="bizInfo" />
+  <CommonHeader :info="bizInfo" v-if="bizInfo.ID" />
   <div>
     <a-table :columns="columns" :data-source="appList" :rowKey="record => record.ID"
              :pagination="pagination" >
@@ -15,12 +15,12 @@
       <template #action="{ record }">
         <div style="display: flex; justify-content: space-around">
           <span>
-            <a-button style="padding: 0" type="link" @click="goToDeployTemplate(record)">新建发布</a-button>
-<!--            <router-link :to="{ path: 'biz/deploy-template', query: { appId: record.ID }}" >新建发布</router-link>-->
+<!--            <a-button style="padding: 0" type="link" @click="goToDeployTemplate(record)">新建发布</a-button>-->
+            <router-link :to="{ path: 'biz/deploy-template', query: { appId: record.ID }}" >新建发布</router-link>
           </span>
           <span>
-<!--            <router-link :to="{ path: 'biz/deploy-list', query: { appId: record.ID }}" >发布列表</router-link>-->
-            <a-button style="padding: 0" type="link" @click="goToDeployList(record)">发布列表</a-button>
+            <router-link :to="{ path: 'biz/deploy-list', query: { appId: record.ID }}" >发布列表</router-link>
+<!--            <a-button style="padding: 0" type="link" @click="goToDeployList(record)">发布列表</a-button>-->
           </span>
         </div>
       </template>
@@ -44,6 +44,7 @@ export default {
   setup() {
     const router = useRouter()
     const { appList, bizInfo } = toRefs(appState)
+    console.log(bizInfo, 'k k k ')
     const columns = [
       { dataIndex: 'Name', key: 'Name', title: '名字',},
       { dataIndex: 'DisplayName', key: 'DisplayName', title: '显示名',},
