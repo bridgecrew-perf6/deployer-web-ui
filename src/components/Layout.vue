@@ -82,6 +82,7 @@ import {useRoute, useRouter} from "vue-router";
 import {createFromIconfontCN, UserOutlined, DownOutlined} from '@ant-design/icons-vue'
 import bizRepositories from "@/composable/bizRepositories";
 import jwtDecode from "jwt-decode";
+import deployerRepository from "@/api/deployerRepository";
 
 export interface BarItem {
   icon: string;
@@ -126,12 +127,23 @@ export default {
       return option.title.toLowerCase().indexOf(input.toLowerCase()) >= 0
     }
 
+    const getBar = async () => {
+      try {
+        const data = await deployerRepository.queryBar()
+        console.log(data, 'bar= =====')
+      } catch (e) {
+        console.error(e)
+      }
+    }
+
     // watch(() => route.path, (value) => {
     //   const url = value.split('/')
     //   state.selectedKeysMenu = [url[2]]
     // })
 
     onMounted(() => {
+      getBar()
+
       const token = localStorage.getItem('token')
       if (token) {
         const userInfo = jwtDecode<{[key: string]: string}>(token)

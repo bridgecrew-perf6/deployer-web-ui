@@ -12,8 +12,10 @@ const ApiBiz = `${API}/my/biz`;
 const ApiApp = `${API}/my/app`;
 const ApiDeploy = `${API}/my/deployment`;
 
+const ApiBar = '/api/my/bar';
 
 export default {
+    queryBar: () => request.get(`${ApiBar}`),
     login: () => request.get<LoginResponse>(`${ApiLogin}`),
 
     getBiz: () => request.get<BizResponse[]>(`${ApiBiz}`),

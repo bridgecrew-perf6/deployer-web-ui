@@ -11,6 +11,10 @@ const vueConfig = {
                 // target: 'http://127.0.0.1:8003',
                 changeOrigin: true,
             },
+            '/api/my/': {
+                target: 'http://127.0.0.1:3000',
+                changeOrigin: true,
+            }
         }
     },
     css: {
