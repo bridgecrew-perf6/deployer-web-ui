@@ -5,9 +5,9 @@
     <ul>
       <li><span>版本号：{{ deploymentInfo.target_version }}</span></li>
       <li><span>创建时间：{{ timeFormat(deploymentInfo.created_at) }}</span></li>
-      <li><a-button>重新发布</a-button></li>
-      <li><a-button>关闭发布</a-button></li>
-      <li><a-button>操作历史</a-button></li>
+      <li><a-button @click="reissue">重新发布</a-button></li>
+      <li><a-button @click="closePublishing">关闭发布</a-button></li>
+      <li><a-button @click="history">操作历史</a-button></li>
     </ul>
   </div>
   <div>
@@ -27,7 +27,10 @@
       <template #action="{ record }">
         <div>
           <span>
-          <a >{{ record.ID }}</a>
+            <a-button type="link" @click="release(record)">发布</a-button>
+          </span>
+          <span>
+            <a-button type="link" @click="rollBack(record)">回滚</a-button>
           </span>
         </div>
       </template>
@@ -66,8 +69,6 @@ export default {
       rsData: [],
     })
     const columns = [
-      { dataIndex: 'ID', key: 'ID', title: 'ID' },
-      { dataIndex: 'Cluster', key: 'Cluster', slots: { customRender: 'Name' }, title: '集群名' },
       {
         dataIndex: 'LogicIdcEnv', key: 'LogicIdcEnv', title: '机房环境',
         children: [
@@ -79,6 +80,7 @@ export default {
           }
         ],
       },
+      { dataIndex: 'Cluster', key: 'Cluster', slots: { customRender: 'Name' }, title: '集群名' },
       { title: '操作', key: 'action', slots: { customRender: 'action' }, align: 'center'},
     ]
     const pagination = reactive({
@@ -104,6 +106,22 @@ export default {
       return await deployerRepository.getAllRsByAppId(appInfo.value.ID)
     }
 
+    const rollBack = async (record: AppRsResponse) => {
+      console.log('rollBack', record);
+    }
+    const release = async (record: AppRsResponse) => {
+      console.log('release', record);
+    }
+    const reissue = async () => {
+      console.log('reissue 重新发布')
+    }
+    const closePublishing = async () => {
+      console.log('关闭发布')
+    }
+    const history = async () => {
+      console.log('history')
+    }
+
     onMounted(() => {
       queryDeploy()
     })
@@ -114,6 +132,11 @@ export default {
       appInfo,
       ...toRefs(stateDeploy),
       timeFormat,
+      rollBack,
+      release,
+      reissue,
+      closePublishing,
+      history,
     }
   }
 }
