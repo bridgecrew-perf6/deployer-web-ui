@@ -44,7 +44,6 @@ export default {
   setup() {
     const router = useRouter()
     const { appList, bizInfo } = toRefs(appState)
-    console.log(bizInfo, 'k k k ')
     const columns = [
       { dataIndex: 'Name', key: 'Name', title: '名字',},
       { dataIndex: 'DisplayName', key: 'DisplayName', title: '显示名',},
