@@ -94,7 +94,7 @@ export default {
         const rsIds = stateDeploy.deploymentInfo?.targets?.map((t: Targets) => t.ReplicaSetID) || []
         stateDeploy.rsData = data.filter((d: AppRsResponse) => rsIds.includes(d.ID))
 
-        console.log(data, ';;;;;', rsIds, stateDeploy.rsData)
+        // console.log(data, ';;;;;', rsIds, stateDeploy.rsData)
       } catch (e) {
         console.error(e)
       }

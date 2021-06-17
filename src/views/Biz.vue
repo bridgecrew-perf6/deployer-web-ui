@@ -59,6 +59,7 @@ export default {
         path: 'biz/deploy-template',
         query: { appId: record.ID }
       })
+      appState.appInfo = record
       localStorage.setItem('appInfo', JSON.stringify(record))
     }
     const goToDeployList = (record: BizAppResponse) => {
@@ -66,6 +67,7 @@ export default {
         path: 'biz/deploy-list',
         query: { appId: record.ID }
       })
+      appState.appInfo = record
       localStorage.setItem('appInfo', JSON.stringify(record))
     }
 

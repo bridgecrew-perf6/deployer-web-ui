@@ -35,7 +35,7 @@ export interface BizAppResponse {
     Comment?: string;
     CreatedAt?: string;
     DisplayName?: string;
-    ID?: number;
+    ID: number;
     InstanceTemplate?: InstanceTemplate;
     Level?: string;
     Name?: string;
