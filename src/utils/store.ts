@@ -13,5 +13,13 @@ export interface App {
 export const appState: UnwrapRef<App> = reactive({
   appList: [],
   bizInfo: {},
-  appInfo: (JSON.parse(localStorage.getItem('appInfo') as string) || {}),
+  appInfo: {},
 })
+
+// export function getAppInfo() {
+//   return JSON.parse(localStorage.getItem('appInfo') as string)
+// }
+
+export const getAppInfo = () => {
+  return JSON.parse(localStorage.getItem('appInfo') as string)
+}

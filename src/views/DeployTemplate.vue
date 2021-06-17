@@ -1,5 +1,11 @@
 <template>
 <div>
+<!--  <Suspense>-->
+<!--    <template #default><CommonHeader :info="appInfo" /></template>-->
+<!--    <template #fallback>-->
+<!--      <h1>Loading...</h1>-->
+<!--    </template>-->
+<!--  </Suspense>-->
   <CommonHeader :info="appInfo" />
   <div>
     <div class="steps-content">
@@ -67,6 +73,7 @@ import {useRoute} from "vue-router";
 import deployerRepository from "@/api/deployerRepository";
 import CommonTree from "@/components/CommonTree.vue";
 import CommonForm from '@/components/CommonForm.vue';
+import appInfoRepositories from "@/composable/appInfoRepositories";
 
 export interface NodeTree {
   id?: number;
@@ -97,6 +104,7 @@ export default {
     const route = useRoute()
     console.log(route.query.appId, '[[[[')
     const { appInfo } = toRefs(appState)
+    console.log(';;;;[[[[', appInfo.value)
     const current = ref<number>(0)
     const steps = [{ title: '选择集群', }, { title: '选择版本', }, { title: 'summary', },]
     const nodeTreeData = ref()
