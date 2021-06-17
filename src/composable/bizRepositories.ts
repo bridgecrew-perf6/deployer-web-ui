@@ -2,6 +2,7 @@ import {onMounted, ref, watch} from "vue";
 import deployerRepository from "@/api/deployerRepository";
 import {BizAppResponse, BizResponse} from "@/utils/response";
 import {appList, appState, bizInfo} from "@/utils/store";
+import router from "@/router";
 
 export default function bizRepositories() {
     const bizId = ref()
@@ -10,9 +11,14 @@ export default function bizRepositories() {
     const getBizList = async () => {
         try {
             bizList.value = await deployerRepository.getBiz()
-            bizId.value = bizList.value?.[0].ID
+            const id = parseInt(localStorage.getItem('bizId') as string, 10)
+            if (!id) {
+                bizId.value = bizList.value?.[0].ID
+            } else {
+                bizId.value = id
+            }
             // bizInfo.value = bizList.value?.[0]
-            appState.bizInfo = bizList.value?.[0]
+            appState.bizInfo = bizList.value?.filter((b: BizResponse) => b.ID === bizId.value)?.[0]
         } catch (e) {
             console.error(e)
         }
@@ -29,7 +35,11 @@ export default function bizRepositories() {
     onMounted(getBizList)
     watch(bizId, (value) => {
         // bizInfo.value = bizList.value.filter(b => b.ID === value)
-        appState.bizInfo = bizList.value.filter(b => b.ID === value)?.[0]
+        if (parseInt(localStorage.getItem('bizId') as string, 10) !== value) {
+            localStorage.setItem('bizId', value.toString())
+            appState.bizInfo = bizList.value.filter(b => b.ID === value)?.[0]
+            router.push('/cd/biz').then()
+        }
         getBizAppList(value).then()
     })
 

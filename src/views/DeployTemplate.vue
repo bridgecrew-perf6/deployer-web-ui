@@ -146,7 +146,7 @@ export default {
       try {
         const appId = parseInt((route.query.appId as string), 10)
         const data = await deployerRepository.getAllRsByAppId(appId) || []
-        console.log(data, '[[[[ LogicIdc Env Cluster 参数rsId"Targets": [{ReplicaSetID: 1},{ReplicaSetID: 2}')
+        // console.log(data, '[[[[ LogicIdc Env Cluster 参数rsId"Targets": [{ReplicaSetID: 1},{ReplicaSetID: 2}')
         const logicIdc = data.map(d => JSON.stringify({
           title: d.LogicIdcEnv?.LogicIdc?.Name,
           key: d.LogicIdcEnv?.LogicIdc?.ID,
@@ -154,7 +154,7 @@ export default {
           children: [],
         }))
         const logicIdcFilter = [...(new Set(logicIdc))].map(j => JSON.parse(j))
-        console.log(logicIdcFilter, ';;;;;')
+        // console.log(logicIdcFilter, ';;;;;')
         logicIdcFilter.map((l: NodeTree, index: number) => {
           data.map(d => {
             if (d.LogicIdcEnv?.LogicIdc?.ID === l.key) {
