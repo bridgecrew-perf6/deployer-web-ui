@@ -7,7 +7,7 @@ const vueConfig = {
         open: true,
         proxy: {
             '/api/v1': {
-                target: 'http://172.16.78.42:8003',
+                target: 'http://deployer-web.dev.ops.sumscope.com:7006',
                 // target: 'http://127.0.0.1:8003',
                 changeOrigin: true,
             },
