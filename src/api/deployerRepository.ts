@@ -1,6 +1,6 @@
 import request from "@/utils/request";
 import {
-    AppRsResponse, BizAppResponse, BizResponse,
+    AppRsResponse, BarItem, BizAppResponse, BizResponse,
     DeploymentResponse, LoginResponse, Page
 } from "@/utils/response";
 
@@ -15,7 +15,7 @@ const ApiDeploy = `${API}/my/deployment`;
 const ApiBar = '/api/my/bar';
 
 export default {
-    queryBar: () => request.get(`${ApiBar}`),
+    queryBar: () => request.get<BarItem[]>(`${ApiBar}`),
     login: () => request.get<LoginResponse>(`${ApiLogin}`),
 
     getBiz: () => request.get<BizResponse[]>(`${ApiBiz}`),

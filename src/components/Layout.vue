@@ -9,18 +9,18 @@
             v-model:selectedKeys="selectedKey"
             :style="{ lineHeight: '58px' }"
         >
-          <a-menu-item>
-            <a href="http://127.0.0.1:4200">业务拓扑</a>
+          <a-menu-item v-for="bar in menuBar" :key="bar.path">
+            <a :href="bar.path">{{ bar.name }}</a>
           </a-menu-item>
-          <a-menu-item>
-            <a href="http://127.0.0.1:4203">运维工具箱</a>
-          </a-menu-item>
-          <a-menu-item key="3">CI</a-menu-item>
-          <a-menu-item key="/">
-            <router-link to="/">CD</router-link>
-          </a-menu-item>
-          <a-menu-item key="5">监控中心</a-menu-item>
-          <a-menu-item key="6">日志中心</a-menu-item>
+<!--          <a-menu-item>-->
+<!--            <a href="http://127.0.0.1:4203">运维工具箱</a>-->
+<!--          </a-menu-item>-->
+<!--          <a-menu-item key="3">CI</a-menu-item>-->
+<!--          <a-menu-item key="/">-->
+<!--            <router-link to="/">CD</router-link>-->
+<!--          </a-menu-item>-->
+<!--          <a-menu-item key="5">监控中心</a-menu-item>-->
+<!--          <a-menu-item key="6">日志中心</a-menu-item>-->
         </a-menu>
         <section>
           <a-avatar class="user-avatar">
@@ -83,12 +83,7 @@ import {createFromIconfontCN, UserOutlined, DownOutlined} from '@ant-design/icon
 import bizRepositories from "@/composable/bizRepositories";
 import jwtDecode from "jwt-decode";
 import deployerRepository from "@/api/deployerRepository";
-
-export interface BarItem {
-  icon: string;
-  path: string;
-  name: string;
-}
+import {BarItem} from "@/utils/response";
 
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_2598067_jca7prjkbw.js'
@@ -113,11 +108,12 @@ export default {
       selectedKeysMenu: [url[2]],
       username: '用户名',
     })
-
     const bar = ref<BarItem[]>([
       {icon: 'icon-home', path: 'biz', name: '总览'},
       {icon: 'icon-about', path: 'about', name: '关于' },
     ])
+    const menuBar = ref<BarItem[]>([])
+
     const logout = () => {
       localStorage.removeItem('token')
       router.push('/login')
@@ -129,8 +125,7 @@ export default {
 
     const getBar = async () => {
       try {
-        const data = await deployerRepository.queryBar()
-        console.log(data, 'bar= =====')
+        menuBar.value = await deployerRepository.queryBar()
       } catch (e) {
         console.error(e)
       }
@@ -156,6 +151,7 @@ export default {
       bizList,
       ...toRefs(state),
       bar,
+      menuBar,
       logout,
       filterOptionBiz,
     }

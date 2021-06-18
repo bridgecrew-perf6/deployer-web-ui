@@ -1,3 +1,8 @@
+export interface BarItem {
+    icon?: string;
+    path: string;
+    name: string;
+}
 export interface LoginResponse {
     url?: string;
     token?: string;
