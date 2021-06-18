@@ -9,7 +9,7 @@
             v-model:selectedKeys="selectedKey"
             :style="{ lineHeight: '58px' }"
         >
-          <a-menu-item v-for="bar in menuBar" :key="bar.path">
+          <a-menu-item v-for="bar in menuBar" :key="bar.route">
             <a :href="bar.path">{{ bar.name }}</a>
           </a-menu-item>
 <!--          <a-menu-item>-->
@@ -104,13 +104,13 @@ export default {
     const { bizId, bizList } = bizRepositories()
 
     const state = reactive({
-      selectedKey: ['/'],
+      selectedKey: ['/cd/biz'],
       selectedKeysMenu: [url[2]],
       username: '用户名',
     })
     const bar = ref<BarItem[]>([
-      {icon: 'icon-home', path: 'biz', name: '总览'},
-      {icon: 'icon-about', path: 'about', name: '关于' },
+      {id: 1, icon: 'icon-home', path: 'biz', name: '总览'},
+      {id: 2, icon: 'icon-about', path: 'about', name: '关于' },
     ])
     const menuBar = ref<BarItem[]>([])
 
@@ -191,6 +191,9 @@ export default {
   .user-avatar {
     margin-right: 4px;
   }
+}
+.layout-header-menu /deep/ .ant-menu-dark .ant-menu-item:hover {
+  background-color: #1890ff;
 }
 .common-content {
   background: #fff;
