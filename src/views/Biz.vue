@@ -5,7 +5,7 @@
 <!--    <p>{{ bizInfo.DisplayName }}</p>-->
 <!--    <p>{{ bizInfo.Comment }}</p>-->
 <!--  </div>-->
-  <CommonHeader :info="bizInfo" v-if="bizInfo.ID" />
+  <CommonHeader :info="bizInfo" />
   <div>
     <a-table :columns="columns" :data-source="appList" :rowKey="record => record.ID"
              :pagination="pagination" >
