@@ -32,6 +32,9 @@
           <span v-if="showRollback(record.ID)">
             <a-button type="link" @click="rollback(record)">回滚</a-button>
           </span>
+          <span v-if="showRedeploy(record.ID)">
+            <a-button type="link" @click="redeploy(record)">重新发布</a-button>
+          </span>
         </div>
       </template>
     </a-table>
@@ -133,6 +136,15 @@ export default {
       return task && task.resolution.steps['confirm_start'].state === 'BLOCKED'
     }
 
+    const redeploy = async (record: AppRsResponse) => {
+      console.log('redoploy', record)
+    }
+
+    const showRedeploy = (id: number) => {
+      const task = stateDeploy.taskMap[id]
+      return task && task.resolution.steps['confirm_rollback'].state === 'BLOCKED'
+    }
+
     const reissue = async () => {
       console.log('reissue 重新发布')
     }
@@ -157,6 +169,8 @@ export default {
       showRollback,
       deploy,
       showDeploy,
+      redeploy,
+      showRedeploy,
       reissue,
       closePublishing,
       history,
