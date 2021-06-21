@@ -124,6 +124,75 @@ export interface Page {
 	totalPages: number;
 }
 
-export interface DeploymentBatch {
+export interface Comment {
+  id: string;
+  created: string;
+  updated: string;
+  content: string;
+}
 
+export interface Task {
+  batch: string;
+  comments: Comment[];
+  created: string;
+  errors: string;
+  id: string;
+  input: {
+    [key: string]: any
+  };
+  last_activity: string;
+  last_start: string;
+  last_stop: string;
+  resolution: string;
+  result: {
+    [key: string]: any
+  };
+  state: string;
+  steps_done: number;
+  steps_total: number;
+  tags: {
+    [key: string]: string
+  };
+  template_name: string;
+  title: string;
+}
+
+export interface Step {
+  name: string;
+  description: string;
+  output: {
+    [key: string]: any
+  };
+  error: string;
+  state: string;
+  try_count: number;
+  max_retries: number;
+  last_run: string;
+  dependencies: string[];
+  foreach_strategy: string;
+  tags: {
+    [key:string]: string
+  };
+}
+
+export interface Resolution {
+  created: string;
+  id: string;
+  instance_id: number;
+  last_start: string;
+  last_stop: string;
+  next_retry: string;
+  run_count: number;
+  run_max: number;
+  state: string;
+  steps: {
+    [key: string]: Step;
+  },
+  task_id: string;
+  task_title: string;
+}
+
+export interface DeploymentBatch {
+  task: Task;
+  resolution: Resolution;
 }
