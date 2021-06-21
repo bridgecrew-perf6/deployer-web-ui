@@ -1,7 +1,7 @@
 import request from "@/utils/request";
 import {
     AppRsResponse, BarItem, BizAppResponse, BizResponse,
-    DeploymentResponse, LoginResponse, Page
+    DeploymentResponse, LoginResponse, Page, DeploymentBatch
 } from "@/utils/response";
 
 
@@ -12,7 +12,13 @@ const ApiBiz = `${API}/my/biz`;
 const ApiApp = `${API}/my/app`;
 const ApiDeploy = `${API}/my/deployment`;
 
-const ApiBar = '/api/my/bar';
+let ApiBar = '/api/my/bar';
+
+if (window.location.hostname.endsWith('dev.ops.sumscope.com')) {
+    ApiBar = 'http://menu.dev.ops.sumscope.com:3000' + ApiBar;
+} else if (window.location.hostname.endsWith('ops.sumscope.com')) {
+    ApiBar = 'http://menu.ops.sumscope.com' + ApiBar;
+}
 
 export default {
     queryBar: () => request.get<BarItem[]>(`${ApiBar}`),
@@ -27,6 +33,6 @@ export default {
     deploymentList: (appId: number) => request.get<Page>(`${ApiApp}/${appId}/deployment`),
 
     queryDeployByDid: (deploymentId: number) => request.get<DeploymentResponse>(`${ApiDeploy}/${deploymentId}`),
-    getDeploymentBatchById: (deploymentId: number) => request.get<any>(`${ApiDeploy}/${deploymentId}/batch`),
-}
 
+    getDeploymentBatchById: (deploymentId: number) => request.get<DeploymentBatch[]>(`${ApiDeploy}/${deploymentId}/batch`),
+}

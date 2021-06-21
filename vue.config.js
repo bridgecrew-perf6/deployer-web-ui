@@ -12,6 +12,10 @@ const vueConfig = {
         target: 'http://172.16.97.194:7006',
         changeOrigin: true,
       },
+      '/apidocs.json': {
+        target: 'http://172.16.97.194:7006',
+        changeOrigin: true,
+      },
       '/api/my/': {
         target: 'http://127.0.0.1:3000',
         changeOrigin: true,

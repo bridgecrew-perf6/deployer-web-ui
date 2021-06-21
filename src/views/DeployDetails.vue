@@ -26,10 +26,10 @@
       </template>
       <template #action="{ record }">
         <div>
-          <span v-if="showDeploy">
+          <span v-if="showDeploy(record.ID)">
             <a-button type="link" @click="deploy(record)">发布</a-button>
           </span>
-          <span v-if="showRollback">
+          <span v-if="showRollback(record.ID)">
             <a-button type="link" @click="rollback(record)">回滚</a-button>
           </span>
         </div>
@@ -41,15 +41,15 @@
 
 <script lang="ts">
 import {onMounted, reactive, ref, toRefs, UnwrapRef} from "vue";
-import {appState} from "@/utils/store";
 import CommonHeader from "@/components/CommonHeader.vue";
 import deployerRepository from "@/api/deployerRepository";
 import {useRoute} from "vue-router";
-import {AppRsResponse, DeploymentResponse, Targets} from "@/utils/response";
+import {AppRsResponse, DeploymentResponse, Targets, DeploymentBatch} from "@/utils/response";
 import moment from "moment";
 
 export interface Deploy {
   deploymentInfo: DeploymentResponse;
+  taskMap: {[key:number]: DeploymentBatch}
   deploymentId: number;
   rsData: AppRsResponse[];
 }
@@ -66,6 +66,7 @@ export default {
     const appId = ref(parseInt(route.params.appId as string, 10))
     const stateDeploy: UnwrapRef<Deploy> = reactive({
       deploymentInfo: {},
+      taskMap: {},
       deploymentId: parseInt((route.query.deploymentId as string), 10),
       rsData: [],
     })
@@ -91,6 +92,12 @@ export default {
     const queryDeploy = async () => {
       try {
         stateDeploy.deploymentInfo = await deployerRepository.queryDeployByDid(stateDeploy.deploymentId)
+        const tasks = await deployerRepository.getDeploymentBatchById(stateDeploy.deploymentId)
+        stateDeploy.taskMap = tasks.reduce((m, v) => {
+          const rsId = v.task.input['replica_set_id'] as number
+          m[rsId] = v
+          return m
+        }, {} as {[key: number]: DeploymentBatch})
         const data = await queryRsByRsId() || []
         const rsIds = stateDeploy.deploymentInfo?.targets?.map((t: Targets) => t.ReplicaSetID) || []
         stateDeploy.rsData = data.filter((d: AppRsResponse) => rsIds.includes(d.ID))
@@ -108,14 +115,22 @@ export default {
       return await deployerRepository.getAllRsByAppId(appId.value)
     }
 
-    const showRollback = ref(false)
     const rollback = async (record: AppRsResponse) => {
       console.log('rollback', record)
     }
 
-    const showDeploy = ref(false)
+    const showRollback = (id: number) => {
+      const task = stateDeploy.taskMap[id]
+      return task && task.resolution.steps['confirm_ok'].state === 'BLOCKED'
+    }
+
     const deploy = async (record: AppRsResponse) => {
       console.log('deploy', record)
+    }
+
+    const showDeploy = (id: number) => {
+      const task = stateDeploy.taskMap[id]
+      return task && task.resolution.steps['confirm_start'].state === 'BLOCKED'
     }
 
     const reissue = async () => {
@@ -128,13 +143,8 @@ export default {
       console.log('history')
     }
 
-    const getDeploymentBatch = async () => {
-      console.log('get deployment batch')
-    }
-
     onMounted(() => {
       queryDeploy()
-      getDeploymentBatch()
     })
 
     return {
@@ -143,10 +153,10 @@ export default {
       appId,
       ...toRefs(stateDeploy),
       timeFormat,
-      showRollback,
       rollback,
-      showDeploy,
+      showRollback,
       deploy,
+      showDeploy,
       reissue,
       closePublishing,
       history,
