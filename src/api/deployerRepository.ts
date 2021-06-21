@@ -30,7 +30,7 @@ export default {
     getAllRsByAppId: (appId: number) => request.get<AppRsResponse[]>(`${ApiApp}/${appId}/rs`),
 
     addDeploymentByAppId: (appId: number, params: any) => request.post(`${ApiApp}/${appId}/deployment`, params),
-    deploymentList: (appId: number) => request.get<Page>(`${ApiApp}/${appId}/deployment`),
+    deploymentList: (appId: number, params?: any) => request.get<Page>(`${ApiApp}/${appId}/deployment`, params),
 
     queryDeployByDid: (deploymentId: number) => request.get<DeploymentResponse>(`${ApiDeploy}/${deploymentId}`),
 

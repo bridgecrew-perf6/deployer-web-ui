@@ -8,6 +8,7 @@
   <CommonHeader :info="bizInfo" />
   <div>
     <a-table :columns="columns" :data-source="appList" :rowKey="record => record.ID"
+             @change="paginationChange"
              :pagination="pagination" >
       <template #name="{ text }">
         <a>{{ text }}</a>
@@ -35,6 +36,7 @@ import { appState } from "@/utils/store";
 import CommonHeader from "@/components/CommonHeader.vue";
 import { useRouter} from "vue-router";
 import {BizAppResponse} from "@/utils/response";
+import {TableState} from "ant-design-vue/es/table/interface";
 
 export default {
   name: "Biz",
@@ -51,7 +53,9 @@ export default {
       { title: '操作', key: 'action', slots: { customRender: 'action', }, align: 'center', width: '200px'},
     ];
     const pagination = reactive({
-      showSizeChanger: true
+      showSizeChanger: true,
+      current: 1,
+      pageSize: 10,
     })
 
     const goToDeployTemplate = (record: BizAppResponse) => {
@@ -70,6 +74,10 @@ export default {
       appState.appInfo = record
       localStorage.setItem('appInfo', JSON.stringify(record))
     }
+    const paginationChange = (page: TableState['pagination']) => {
+      pagination.current = page?.current as number
+      pagination.pageSize = page?.pageSize as number
+    }
 
     return {
       appList,
@@ -78,6 +86,7 @@ export default {
       pagination,
       goToDeployTemplate,
       goToDeployList,
+      paginationChange,
     }
   }
 }

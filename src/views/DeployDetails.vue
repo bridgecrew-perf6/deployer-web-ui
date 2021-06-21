@@ -5,9 +5,31 @@
     <ul>
       <li><span>版本号：{{ deploymentInfo.target_version }}</span></li>
       <li><span>创建时间：{{ timeFormat(deploymentInfo.created_at) }}</span></li>
-      <li><a-button @click="reissue">重新发布</a-button></li>
-      <li><a-button @click="closePublishing">关闭发布</a-button></li>
-      <li><a-button @click="history">操作历史</a-button></li>
+      <li>
+        <a-popconfirm
+          title="确定重新发布?"
+          ok-text="Yes"
+          cancel-text="No"
+          @confirm="reissueConfirm"
+          @cancel="reissueCancel"
+        >
+          <a-button >重新发布</a-button>
+        </a-popconfirm>
+      </li>
+      <li>
+        <a-popconfirm
+          title="确定关闭发布?"
+          ok-text="Yes"
+          cancel-text="No"
+          @confirm="closePublishingConfirm"
+          @cancel="closePublishingCancel"
+        >
+          <a-button >关闭发布</a-button>
+        </a-popconfirm>
+      </li>
+      <li>
+        <a-button @click="history">操作历史</a-button>
+      </li>
     </ul>
   </div>
   <div>
@@ -27,10 +49,26 @@
       <template #action="{ record }">
         <div>
           <span v-if="showDeploy(record.ID)">
-            <a-button type="link" @click="deploy(record)">发布</a-button>
+            <a-popconfirm
+              title="确定发布?"
+              ok-text="Yes"
+              cancel-text="No"
+              @confirm="deployConfirm(record.ID)"
+              @cancel="deployCancel(record.ID)"
+            >
+              <a-button type="link" >发布</a-button>
+            </a-popconfirm>
           </span>
           <span v-if="showRollback(record.ID)">
-            <a-button type="link" @click="rollback(record)">回滚</a-button>
+            <a-popconfirm
+              title="确定回滚?"
+              ok-text="Yes"
+              cancel-text="No"
+              @confirm="rollbackConfirm(record.ID)"
+              @cancel="rollbackCancel(record.ID)"
+            >
+              <a-button type="link" >回滚</a-button>
+            </a-popconfirm>
           </span>
           <span v-if="showRedeploy(record.ID)">
             <a-button type="link" @click="redeploy(record)">重新发布</a-button>
@@ -49,6 +87,7 @@ import deployerRepository from "@/api/deployerRepository";
 import {useRoute} from "vue-router";
 import {AppRsResponse, DeploymentResponse, Targets, DeploymentBatch} from "@/utils/response";
 import moment from "moment";
+import {Modal} from "ant-design-vue";
 
 export interface Deploy {
   deploymentInfo: DeploymentResponse;
@@ -120,6 +159,15 @@ export default {
 
     const rollback = async (record: AppRsResponse) => {
       console.log('rollback', record)
+      Modal.confirm({
+        title: '确认回滚？',
+        onOk() {
+          console.log('OK');
+        },
+        onCancel() {
+          console.log('Cancel');
+        },
+      })
     }
 
     const showRollback = (id: number) => {
@@ -129,6 +177,15 @@ export default {
 
     const deploy = async (record: AppRsResponse) => {
       console.log('deploy', record)
+      Modal.confirm({
+        title: '确认发布',
+        onOk() {
+          console.log('OK');
+        },
+        onCancel() {
+          console.log('Cancel');
+        },
+      })
     }
 
     const showDeploy = (id: number) => {
@@ -154,6 +211,30 @@ export default {
     const history = async () => {
       console.log('history')
     }
+    const reissueConfirm = () => {
+      console.log('确定')
+    }
+    const reissueCancel = () => {
+      console.log('取消')
+    }
+    const rollbackCancel = (id: number) => {
+      console.log(id, '取消回滚')
+    }
+    const rollbackConfirm = (id: number) => {
+      console.log('确认回滚', id)
+    }
+    const deployConfirm = (id: number) => {
+      console.log('确认发布', id)
+    }
+    const deployCancel = (id: number) => {
+      console.log('取消发布', id)
+    }
+    const closePublishingConfirm = () => {
+      console.log('确认关闭')
+    }
+    const closePublishingCancel = () => {
+      console.log('取消关闭')
+    }
 
     onMounted(() => {
       queryDeploy()
@@ -174,6 +255,14 @@ export default {
       reissue,
       closePublishing,
       history,
+      reissueConfirm,
+      reissueCancel,
+      rollbackCancel,
+      rollbackConfirm,
+      deployConfirm,
+      deployCancel,
+      closePublishingConfirm,
+      closePublishingCancel,
     }
   }
 }

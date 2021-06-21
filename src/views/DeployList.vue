@@ -2,7 +2,9 @@
 <div>
   <CommonHeader :app-id="appId" />
   <div>
-    <a-table :columns="columns" :data-source="deployData" :pagination="pagination" :rowKey="record => record.id">
+    <a-table :columns="columns" :data-source="deployData"
+             @change="paginationChange"
+             :pagination="pagination" :rowKey="record => record.id">
       <template #name="{ text }">
         <a>{{ text }}</a>
       </template>
@@ -24,6 +26,7 @@ import {appState} from "@/utils/store";
 import {onMounted, reactive, ref, toRefs} from "vue";
 import deployerRepository from "@/api/deployerRepository";
 import {DeploymentResponse} from "@/utils/response";
+import {TableState} from "ant-design-vue/es/table/interface";
 
 export default {
   name: "DeployList",
@@ -46,14 +49,27 @@ export default {
       { title: '操作', key: 'action', slots: { customRender: 'action' }, align: 'center'},
     ]
     const pagination = reactive({
-      showSizeChanger: true
+      showSizeChanger: true,
+      current: 1,
+      pageSize: 20,
+      total: 1,
     })
     const deployData = ref<DeploymentResponse[]>([])
 
     const getDeploymentList = async () => {
       const appId = parseInt((route.query.appId as string), 10)
-      const data = await deployerRepository.deploymentList(appId)
+      const value = {
+        pageNumber: pagination.current,
+        pageSize: pagination.pageSize,
+      }
+      const data = await deployerRepository.deploymentList(appId, value)
       deployData.value = data.content
+      pagination.total = data.totalElements
+    }
+    const paginationChange = (page: TableState['pagination']) => {
+      pagination.current = page?.current as number
+      pagination.pageSize = page?.pageSize as number
+      getDeploymentList()
     }
 
     onMounted(() => {
@@ -65,6 +81,7 @@ export default {
       columns,
       deployData,
       pagination,
+      paginationChange,
     }
   }
 }
