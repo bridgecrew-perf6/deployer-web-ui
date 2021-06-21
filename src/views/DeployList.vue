@@ -59,8 +59,8 @@ export default {
     const getDeploymentList = async () => {
       const appId = parseInt((route.query.appId as string), 10)
       const value = {
-        page: pagination.current,
-        size: pagination.pageSize,
+        pageNumber: pagination.current,
+        pageSize: pagination.pageSize,
       }
       const data = await deployerRepository.deploymentList(appId, value)
       deployData.value = data.content
