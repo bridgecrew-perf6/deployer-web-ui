@@ -9,7 +9,7 @@
       <template #action="{ record }">
         <span>
 <!--          <router-link :to="{ path: '/biz/deploy-details', query: { deploymentId: record.id } }">发布详情</router-link>-->
-          <router-link :to="{ path: `deploy-list/${record.id}/details`, query: { deploymentId: record.id } }">发布详情</router-link>
+          <router-link :to="{ path: `deploy-list/${appId}/details`, query: { deploymentId: record.id } }">发布详情</router-link>
         </span>
       </template>
     </a-table>
