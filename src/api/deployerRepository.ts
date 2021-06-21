@@ -27,5 +27,6 @@ export default {
     deploymentList: (appId: number) => request.get<Page>(`${ApiApp}/${appId}/deployment`),
 
     queryDeployByDid: (deploymentId: number) => request.get<DeploymentResponse>(`${ApiDeploy}/${deploymentId}`),
+    getDeploymentBatchById: (deploymentId: number) => request.get<any>(`${ApiDeploy}/${deploymentId}/batch`),
 }
 

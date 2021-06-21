@@ -26,11 +26,11 @@
       </template>
       <template #action="{ record }">
         <div>
-          <span>
-            <a-button type="link" @click="release(record)">发布</a-button>
+          <span v-if="showDeploy">
+            <a-button type="link" @click="deploy(record)">发布</a-button>
           </span>
-          <span>
-            <a-button type="link" @click="rollBack(record)">回滚</a-button>
+          <span v-if="showRollback">
+            <a-button type="link" @click="rollback(record)">回滚</a-button>
           </span>
         </div>
       </template>
@@ -100,6 +100,7 @@ export default {
         console.error(e)
       }
     }
+
     const timeFormat = (value: string) => {
       return moment(value).format('YYYY-MM-DD HH:mm:ss')
     }
@@ -107,12 +108,16 @@ export default {
       return await deployerRepository.getAllRsByAppId(appId.value)
     }
 
-    const rollBack = async (record: AppRsResponse) => {
-      console.log('rollBack', record);
+    const showRollback = ref(false)
+    const rollback = async (record: AppRsResponse) => {
+      console.log('rollback', record)
     }
-    const release = async (record: AppRsResponse) => {
-      console.log('release', record);
+
+    const showDeploy = ref(false)
+    const deploy = async (record: AppRsResponse) => {
+      console.log('deploy', record)
     }
+
     const reissue = async () => {
       console.log('reissue 重新发布')
     }
@@ -123,8 +128,13 @@ export default {
       console.log('history')
     }
 
+    const getDeploymentBatch = async () => {
+      console.log('get deployment batch')
+    }
+
     onMounted(() => {
       queryDeploy()
+      getDeploymentBatch()
     })
 
     return {
@@ -133,8 +143,10 @@ export default {
       appId,
       ...toRefs(stateDeploy),
       timeFormat,
-      rollBack,
-      release,
+      showRollback,
+      rollback,
+      showDeploy,
+      deploy,
       reissue,
       closePublishing,
       history,
