@@ -51,19 +51,25 @@ export default {
     const pagination = reactive({
       showSizeChanger: true,
       current: 1,
-      pageSize: 10,
+      pageSize: 20,
       total: 1,
     })
     const deployData = ref<DeploymentResponse[]>([])
 
     const getDeploymentList = async () => {
       const appId = parseInt((route.query.appId as string), 10)
-      const data = await deployerRepository.deploymentList(appId)
+      const value = {
+        page: pagination.current,
+        size: pagination.pageSize,
+      }
+      const data = await deployerRepository.deploymentList(appId, value)
       deployData.value = data.content
       pagination.total = data.totalElements
     }
     const paginationChange = (page: TableState['pagination']) => {
-      console.log(page, ';;;')
+      pagination.current = page?.current as number
+      pagination.pageSize = page?.pageSize as number
+      getDeploymentList()
     }
 
     onMounted(() => {
