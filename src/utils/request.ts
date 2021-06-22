@@ -14,7 +14,8 @@ service.interceptors.request.use(config => {
   if (token) {
     config.headers.Authorization = 'Bearer ' + token; //如果token 存在，就带上token
   } else {
-    config.headers['token'] = ''; //return
+    router.push('/login').then();
+    // config.headers['token'] = ''; //return
   }
   return config;
 }, error => {

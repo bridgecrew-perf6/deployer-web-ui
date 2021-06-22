@@ -17,6 +17,9 @@ export default {
         await localStorage.setItem('token', data.token)
         await router.push('/cd/biz').then()
       }
+      // else {
+      //   router.push('/login').then()
+      // }
     }
 
     if (!token) {
