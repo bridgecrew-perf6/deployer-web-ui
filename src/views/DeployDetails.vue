@@ -13,7 +13,7 @@
           @confirm="reissueConfirm"
           @cancel="reissueCancel"
         >
-          <a-button >重新发布</a-button>
+          <a-button >确认发布成功</a-button>
         </a-popconfirm>
       </li>
       <li>
@@ -53,8 +53,7 @@
               title="确定发布?"
               ok-text="Yes"
               cancel-text="No"
-              @confirm="deployConfirm(record.ID)"
-              @cancel="deployCancel(record.ID)"
+              @confirm="deploy(record)"
             >
               <a-button type="link" >发布</a-button>
             </a-popconfirm>
@@ -64,10 +63,19 @@
               title="确定回滚?"
               ok-text="Yes"
               cancel-text="No"
-              @confirm="rollbackConfirm(record.ID)"
-              @cancel="rollbackCancel(record.ID)"
+              @confirm="rollback(record)"
             >
               <a-button type="link" >回滚</a-button>
+            </a-popconfirm>
+          </span>
+          <span v-if="showRedeploy(record.ID)">
+            <a-popconfirm
+              title="确定重新发布?"
+              ok-text="Yes"
+              cancel-text="No"
+              @confirm="redeploy(record)"
+            >
+              <a-button type="link" >重新发布</a-button>
             </a-popconfirm>
           </span>
         </div>
@@ -155,16 +163,7 @@ export default {
     }
 
     const rollback = async (record: AppRsResponse) => {
-      console.log('rollback', record)
-      Modal.confirm({
-        title: '确认回滚？',
-        onOk() {
-          console.log('OK');
-        },
-        onCancel() {
-          console.log('Cancel');
-        },
-      })
+      deployerRepository.confirmDeploymentReplicaSetStep(stateDeploy.deploymentId, record.ID, 'confirm_ok', 'NO')
     }
 
     const showRollback = (id: number) => {
@@ -173,21 +172,21 @@ export default {
     }
 
     const deploy = async (record: AppRsResponse) => {
-      console.log('deploy', record)
-      Modal.confirm({
-        title: '确认发布',
-        onOk() {
-          console.log('OK');
-        },
-        onCancel() {
-          console.log('Cancel');
-        },
-      })
+      deployerRepository.confirmDeploymentReplicaSetStep(stateDeploy.deploymentId, record.ID, 'confirm_start', 'YES')
     }
 
     const showDeploy = (id: number) => {
       const task = stateDeploy.taskMap[id]
       return task && task.resolution.steps['confirm_start'].state === 'BLOCKED'
+    }
+
+    const redeploy = async (record: AppRsResponse) => {
+      deployerRepository.redoDeploymentReplicaSetStep(stateDeploy.deploymentId, record.ID, 'confirm_start')
+    }
+
+    const showRedeploy = (id: number) => {
+      const task = stateDeploy.taskMap[id]
+      return task && task.resolution.steps['confirm_rollback'].state === 'BLOCKED'
     }
 
     const reissue = async () => {
@@ -238,6 +237,8 @@ export default {
       showRollback,
       deploy,
       showDeploy,
+      redeploy,
+      showRedeploy,
       reissue,
       closePublishing,
       history,

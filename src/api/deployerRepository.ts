@@ -35,4 +35,10 @@ export default {
     queryDeployByDid: (deploymentId: number) => request.get<DeploymentResponse>(`${ApiDeploy}/${deploymentId}`),
 
     getDeploymentBatchById: (deploymentId: number) => request.get<DeploymentBatch[]>(`${ApiDeploy}/${deploymentId}/batch`),
+
+    confirmDeploymentReplicaSetStep: (deploymentId: number, rsId: number, stepName: string, value: string) =>
+        request.put<void>(`${ApiDeploy}/${deploymentId}/batch/replicaset/${rsId}/step/${stepName}/confirm`, {value}),
+
+    redoDeploymentReplicaSetStep: (deploymentId: number, rsId: number, stepName: string) =>
+        request.post<void>(`${ApiDeploy}/${deploymentId}/batch/replicaset/${rsId}/step/${stepName}/redo`, {})
 }
