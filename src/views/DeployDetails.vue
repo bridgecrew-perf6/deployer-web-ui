@@ -223,18 +223,6 @@ export default {
       return true
     }
 
-    const rollbackConfirm = (id: number) => {
-      console.log('确认回滚', id)
-    }
-
-    const deployConfirm = (id: number) => {
-      console.log('确认发布', id)
-    }
-
-    const deployCancel = (id: number) => {
-      console.log('取消发布', id)
-    }
-
     const closeDeployment = () => {
       console.log('确认关闭')
     }
@@ -288,9 +276,6 @@ export default {
       history,
       confirmSuccess,
       enableConfirmSuccess,
-      rollbackConfirm,
-      deployConfirm,
-      deployCancel,
       closeDeployment,
       enableCloseDeployment,
     }
