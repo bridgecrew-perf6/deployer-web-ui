@@ -30,6 +30,9 @@
       <li>
         <a-button @click="history">操作历史</a-button>
       </li>
+      <li>
+        <a-switch v-model:checked="autoRefresh" />
+      </li>
     </ul>
   </div>
   <div>
@@ -86,7 +89,7 @@
 </template>
 
 <script lang="ts">
-import {onMounted, reactive, ref, toRefs, UnwrapRef} from "vue";
+import {onBeforeUnmount, onMounted, reactive, ref, toRefs, UnwrapRef, watch} from "vue";
 import CommonHeader from "@/components/CommonHeader.vue";
 import deployerRepository from "@/api/deployerRepository";
 import {useRoute} from "vue-router";
@@ -99,6 +102,7 @@ export interface Deploy {
   taskMap: {[key:number]: DeploymentBatch}
   deploymentId: number;
   rsData: AppRsResponse[];
+  autoRefresh: boolean;
 }
 
 export default {
@@ -116,6 +120,7 @@ export default {
       taskMap: {},
       deploymentId: parseInt((route.query.deploymentId as string), 10),
       rsData: [],
+      autoRefresh: true,
     })
     const columns = [
       {
@@ -135,6 +140,7 @@ export default {
     const pagination = reactive({
       showSizeChanger: true
     })
+    const timer = ref()
 
     const queryDeploy = async () => {
       try {
@@ -232,8 +238,28 @@ export default {
       console.log('取消关闭')
     }
 
+    const watchRefresh = () => {
+      timer.value = setInterval(() => {
+        if (stateDeploy.autoRefresh) {
+          queryDeploy()
+        } else {
+          clearInterval(timer.value)
+        }
+      }, 3000)
+    }
+
+    watch(() => stateDeploy.autoRefresh, (value) => {
+      if (value) {
+        watchRefresh()
+      }
+    })
     onMounted(() => {
       queryDeploy()
+
+      watchRefresh()
+    })
+    onBeforeUnmount(() => {
+      clearInterval(timer.value)
     })
 
     return {

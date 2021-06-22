@@ -13,7 +13,8 @@ import {
   Steps,
   Checkbox,
   Form,
-  Popconfirm
+  Popconfirm,
+  Switch,
 } from "ant-design-vue";
 
 const app = createApp(App)
@@ -31,5 +32,6 @@ app.use(Steps)
 app.use(Checkbox)
 app.use(Form)
 app.use(Popconfirm)
+app.use(Switch)
 
 app.mount('#app')
