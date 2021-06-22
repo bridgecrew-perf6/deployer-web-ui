@@ -11,9 +11,9 @@
           ok-text="Yes"
           cancel-text="No"
           @confirm="confirmSuccess"
-          :disabled="!showConfirmSuccess(taskMap)"
+          :disabled="!enableConfirmSuccess(taskMap)"
         >
-          <a-button :disabled="!showConfirmSuccess(taskMap)">确认发布成功</a-button>
+          <a-button :disabled="!enableConfirmSuccess(taskMap)">确认发布成功</a-button>
         </a-popconfirm>
       </li>
       <li>
@@ -22,8 +22,9 @@
           ok-text="Yes"
           cancel-text="No"
           @confirm="closeDeployment"
+          :disabled="!enableCloseDeployment(taskMap)"
         >
-          <a-button >关闭发布</a-button>
+          <a-button :disabled="!enableCloseDeployment(taskMap)">关闭发布</a-button>
         </a-popconfirm>
       </li>
       <li>
@@ -47,6 +48,9 @@
       </template>
       <template #env="{ record }">
         <span> {{ record.LogicIdcEnv.Env.Name }}</span>
+      </template>
+      <template #currentState="{ record }">
+        hello world {{record.ID}}
       </template>
       <template #action="{ record }">
         <div>
@@ -94,7 +98,6 @@ import deployerRepository from "@/api/deployerRepository";
 import {useRoute} from "vue-router";
 import {AppRsResponse, DeploymentResponse, Targets, DeploymentBatch} from "@/utils/response";
 import moment from "moment";
-import {Modal} from "ant-design-vue";
 
 export interface Deploy {
   deploymentInfo: DeploymentResponse;
@@ -134,6 +137,7 @@ export default {
         ],
       },
       { dataIndex: 'Cluster', key: 'Cluster', slots: { customRender: 'Name' }, title: '集群名' },
+      { key: 'CurrentState', slots: { customRender: 'currentState' }, title: '当前状态' },
       { title: '操作', key: 'action', slots: { customRender: 'action' }, align: 'center'},
     ]
     const pagination = reactive({
@@ -194,21 +198,22 @@ export default {
       return task && task.resolution.steps['confirm_rollback'].state === 'BLOCKED'
     }
 
-    const reissue = async () => {
-      console.log('reissue 重新发布')
-    }
-    const closePublishing = async () => {
-      console.log('关闭发布')
-    }
     const history = async () => {
       console.log('history')
     }
 
-    const confirmSuccess = () => {
-      console.log('确定')
+    const confirmSuccess = async () => {
+      for (let i = 0; i < stateDeploy.rsData.length; i++) {
+        let id = stateDeploy.rsData[i].ID
+        try {
+          await deployerRepository.confirmDeploymentReplicaSetStep(stateDeploy.deploymentId, id, 'confirm_ok', 'YES')
+        } catch (e) {
+          console.error(e)
+        }
+      }
     }
 
-    const showConfirmSuccess = (taskMap: {[key:number]: DeploymentBatch}) => {
+    const enableConfirmSuccess = (taskMap: {[key:number]: DeploymentBatch}) => {
       for (let k in taskMap) {
         let task = taskMap[k]
         if (task.resolution.steps['confirm_ok'].state !== 'BLOCKED') {
@@ -218,20 +223,30 @@ export default {
       return true
     }
 
-    const rollbackCancel = (id: number) => {
-      console.log(id, '取消回滚')
-    }
     const rollbackConfirm = (id: number) => {
       console.log('确认回滚', id)
     }
+
     const deployConfirm = (id: number) => {
       console.log('确认发布', id)
     }
+
     const deployCancel = (id: number) => {
       console.log('取消发布', id)
     }
+
     const closeDeployment = () => {
       console.log('确认关闭')
+    }
+
+    const enableCloseDeployment = (taskMap: {[key:number]: DeploymentBatch}) => {
+      for (let k in taskMap) {
+        let task = taskMap[k]
+        if (task.resolution.steps['confirm_rollback'].state !== 'BLOCKED') {
+          return false
+        }
+      }
+      return true
     }
 
     const watchRefresh = () => {
@@ -270,16 +285,14 @@ export default {
       showDeploy,
       redeploy,
       showRedeploy,
-      reissue,
-      closePublishing,
       history,
       confirmSuccess,
-      showConfirmSuccess,
-      rollbackCancel,
+      enableConfirmSuccess,
       rollbackConfirm,
       deployConfirm,
       deployCancel,
       closeDeployment,
+      enableCloseDeployment,
     }
   }
 }
