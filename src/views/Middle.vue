@@ -16,9 +16,10 @@ export default {
       if (data?.token) {
         await localStorage.setItem('token', data.token)
         await router.push('/cd/biz').then()
-      } else {
-        router.push('/login').then()
       }
+      // else {
+      //   router.push('/login').then()
+      // }
     }
 
     if (!token) {
