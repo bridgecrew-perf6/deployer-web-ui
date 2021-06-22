@@ -247,13 +247,19 @@ export default {
     const currentTaskState = (r: AppRsResponse) => {
       let task = stateDeploy.taskMap[r.ID]
       if (task === null) {
-        return "未知状态"
+        return '未知状态'
+      }
+      if (task.resolution.steps['confirm_rollback'].state === 'DONE') {
+        return '回滚成功'
       }
       if (task.resolution.steps['confirm_rollback'].state === 'BLOCKED') {
         return '回滚完成'
       }
       if (task.resolution.steps['confirm_ok'].state === 'DONE' && task.resolution.steps['confirm_ok'].output['value'] !== 'YES') {
         return '回滚中'
+      }
+      if (task.resolution.steps['confirm_ok'].state === 'DONE' && task.resolution.steps['confirm_ok'].output['value'] === 'YES') {
+        return '发布成功'
       }
       if (task.resolution.steps['confirm_ok'].state === 'BLOCKED') {
         return '发布完成'
