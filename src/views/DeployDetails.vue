@@ -7,13 +7,13 @@
       <li><span>创建时间：{{ timeFormat(deploymentInfo.created_at) }}</span></li>
       <li>
         <a-popconfirm
-          title="确定重新发布?"
+          title="确定发布成功?"
           ok-text="Yes"
           cancel-text="No"
-          @confirm="reissueConfirm"
-          @cancel="reissueCancel"
+          @confirm="confirmSuccess"
+          :disabled="!showConfirmSuccess(taskMap)"
         >
-          <a-button >确认发布成功</a-button>
+          <a-button :disabled="!showConfirmSuccess(taskMap)">确认发布成功</a-button>
         </a-popconfirm>
       </li>
       <li>
@@ -198,12 +198,21 @@ export default {
     const history = async () => {
       console.log('history')
     }
-    const reissueConfirm = () => {
+
+    const confirmSuccess = () => {
       console.log('确定')
     }
-    const reissueCancel = () => {
-      console.log('取消')
+
+    const showConfirmSuccess = (taskMap: {[key:number]: DeploymentBatch}) => {
+      for (let k in taskMap) {
+        let task = taskMap[k]
+        if (task.resolution.steps['confirm_ok'].state !== 'BLOCKED') {
+          return false
+        }
+      }
+      return true
     }
+
     const rollbackCancel = (id: number) => {
       console.log(id, '取消回滚')
     }
@@ -242,8 +251,8 @@ export default {
       reissue,
       closePublishing,
       history,
-      reissueConfirm,
-      reissueCancel,
+      confirmSuccess,
+      showConfirmSuccess,
       rollbackCancel,
       rollbackConfirm,
       deployConfirm,
