@@ -50,7 +50,7 @@
         <span> {{ record.LogicIdcEnv.Env.Name }}</span>
       </template>
       <template #currentState="{ record }">
-        hello world {{record.ID}}
+        {{ currentTaskState(record) }}
       </template>
       <template #action="{ record }">
         <div>
@@ -244,6 +244,28 @@ export default {
       return true
     }
 
+    const currentTaskState = (r: AppRsResponse) => {
+      let task = stateDeploy.taskMap[r.ID]
+      if (task === null) {
+        return "未知状态"
+      }
+      if (task.resolution.steps['confirm_rollback'].state === 'BLOCKED') {
+        return '回滚完成'
+      }
+      if (task.resolution.steps['confirm_ok'].state === 'DONE' && task.resolution.steps['confirm_ok'].output['value'] !== 'YES') {
+        return '回滚中'
+      }
+      if (task.resolution.steps['confirm_ok'].state === 'BLOCKED') {
+        return '发布完成'
+      }
+      if (task.resolution.steps['confirm_start'].state === 'DONE') {
+        return '发布中'
+      }
+      if (task.resolution.steps['confirm_start'].state === 'BLOCKED') {
+        return '等待发布'
+      }
+    }
+
     const watchRefresh = () => {
       timer.value = setInterval(() => {
         if (stateDeploy.autoRefresh) {
@@ -251,7 +273,7 @@ export default {
         } else {
           clearInterval(timer.value)
         }
-      }, 3000)
+      }, 5000)
     }
 
     watch(() => stateDeploy.autoRefresh, (value) => {
@@ -259,11 +281,13 @@ export default {
         watchRefresh()
       }
     })
+
     onMounted(() => {
       queryDeploy()
 
       watchRefresh()
     })
+
     onBeforeUnmount(() => {
       clearInterval(timer.value)
     })
@@ -285,6 +309,7 @@ export default {
       enableConfirmSuccess,
       closeDeployment,
       enableCloseDeployment,
+      currentTaskState,
     }
   }
 }
