@@ -21,8 +21,7 @@
           title="确定关闭发布?"
           ok-text="Yes"
           cancel-text="No"
-          @confirm="closePublishingConfirm"
-          @cancel="closePublishingCancel"
+          @confirm="closeDeployment"
         >
           <a-button >关闭发布</a-button>
         </a-popconfirm>
@@ -225,11 +224,8 @@ export default {
     const deployCancel = (id: number) => {
       console.log('取消发布', id)
     }
-    const closePublishingConfirm = () => {
+    const closeDeployment = () => {
       console.log('确认关闭')
-    }
-    const closePublishingCancel = () => {
-      console.log('取消关闭')
     }
 
     onMounted(() => {
@@ -257,8 +253,7 @@ export default {
       rollbackConfirm,
       deployConfirm,
       deployCancel,
-      closePublishingConfirm,
-      closePublishingCancel,
+      closeDeployment,
     }
   }
 }
