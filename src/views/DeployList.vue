@@ -51,7 +51,7 @@ export default {
     const pagination = reactive({
       showSizeChanger: true,
       current: 1,
-      pageSize: 20,
+      pageSize: 10,
       total: 1,
     })
     const deployData = ref<DeploymentResponse[]>([])
@@ -59,7 +59,7 @@ export default {
     const getDeploymentList = async () => {
       const appId = parseInt((route.query.appId as string), 10)
       const value = {
-        pageNumber: pagination.current,
+        pageNumber: pagination.current - 1,
         pageSize: pagination.pageSize,
       }
       const data = await deployerRepository.deploymentList(appId, value)
