@@ -223,8 +223,15 @@ export default {
       return true
     }
 
-    const closeDeployment = () => {
-      console.log('确认关闭')
+    const closeDeployment = async () => {
+      for (let i = 0; i < stateDeploy.rsData.length; i++) {
+        let id = stateDeploy.rsData[i].ID
+        try {
+          await deployerRepository.confirmDeploymentReplicaSetStep(stateDeploy.deploymentId, id, 'confirm_rollback', 'YES')
+        } catch (e) {
+          console.error(e)
+        }
+      }
     }
 
     const enableCloseDeployment = (taskMap: {[key:number]: DeploymentBatch}) => {
