@@ -171,7 +171,7 @@ export default {
 }
 
 .logo {
-  width: 120px;
+  min-width: 120px;
   height: 58px;
   float: left;
   color: #fff;
