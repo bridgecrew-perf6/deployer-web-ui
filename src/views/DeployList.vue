@@ -10,7 +10,6 @@
       </template>
       <template #action="{ record }">
         <span>
-<!--          <router-link :to="{ path: '/biz/deploy-details', query: { deploymentId: record.id } }">发布详情</router-link>-->
           <router-link :to="{ path: `deploy-list/${appId}/details`, query: { deploymentId: record.id } }">发布详情</router-link>
         </span>
       </template>
@@ -22,8 +21,7 @@
 <script lang="ts">
 import {useRoute} from "vue-router";
 import CommonHeader from "@/components/CommonHeader.vue";
-import {appState} from "@/utils/store";
-import {onMounted, reactive, ref, toRefs} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import deployerRepository from "@/api/deployerRepository";
 import {DeploymentResponse} from "@/utils/response";
 import {TableState} from "ant-design-vue/es/table/interface";
@@ -39,13 +37,14 @@ export default {
     // const { appInfo } = toRefs(appState)
     // console.log(route.query.appId, '[[[[', appInfo)
     const columns = [
-      { dataIndex: 'target_version', key: 'target_version', title: '目标版本'},
-      { dataIndex: 'current_version', key: 'current_version', title: '当前版本' },
+      { dataIndex: 'target_version', key: 'target_version', title: '目标版本' },
+      { dataIndex: 'current_version', key: 'current_version', title: '原始版本' },
       { dataIndex: 'app_name', key: 'app_name', title: '应用名' },
       { dataIndex: 'app_display_name', key: 'app_display_name', title: '应用显示名' },
       { dataIndex: 'state', key: 'state', title: '状态' },
+      { dataIndex: 'result', key: 'result', title: '结果' },
+      { dataIndex: 'create_by_username', key: 'create_by_username', title: '创建人' },
       { dataIndex: 'comment', key: 'comment', title: '备注' },
-      { dataIndex: 'template_id', key: 'template_id', title: '模板ID' },
       { title: '操作', key: 'action', slots: { customRender: 'action' }, align: 'center'},
     ]
     const pagination = reactive({

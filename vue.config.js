@@ -8,10 +8,10 @@ const vueConfig = {
     open: true,
     proxy: {
       '/api/v1': {
-        target: 'http://172.16.97.194:7006',
+        target: 'http://127.0.0.1:10000',
       },
       '/apidocs.json': {
-        target: 'http://172.16.97.194:7006',
+        target: 'http://127.0.0.1:10000',
       },
       '/api/my/': {
         target: 'http://127.0.0.1:3000',
@@ -28,6 +28,6 @@ const vueConfig = {
       }
     }
   }
-}
+};
 
-module.exports = vueConfig
+module.exports = vueConfig;
