@@ -5,6 +5,7 @@
     <ul>
       <li><span>版本号：{{ deploymentInfo.target_version }}</span></li>
       <li><span>创建时间：{{ timeFormat(deploymentInfo.created_at) }}</span></li>
+      <li><span>创建人：{{deploymentInfo.create_by_username}}</span></li>
       <li>
         <a-popconfirm
           title="确定发布成功?"
@@ -31,7 +32,13 @@
         <a-button @click="history">操作历史</a-button>
       </li>
       <li>
+        <span>自动刷新 (5s)</span>
+      </li>
+      <li>
         <a-switch v-model:checked="autoRefresh" />
+      </li>
+      <li>
+        <a-button @click="refresh">刷新</a-button>
       </li>
     </ul>
   </div>
@@ -162,6 +169,10 @@ export default {
       } catch (e) {
         console.error(e)
       }
+    }
+
+    const refresh = () => {
+      queryDeploy()
     }
 
     const timeFormat = (value: string) => {
@@ -316,6 +327,7 @@ export default {
       closeDeployment,
       enableCloseDeployment,
       currentTaskState,
+      refresh,
     }
   }
 }
