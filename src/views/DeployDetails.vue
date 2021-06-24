@@ -59,6 +59,9 @@
       <template #currentState="{ record }">
         {{ currentTaskState(record) }}
       </template>
+      <template #subTaskState="{ record }">
+        {{ subTaskState(record) }}
+      </template>
       <template #action="{ record }">
         <div>
           <span v-if="showDeploy(record.ID)">
@@ -105,6 +108,7 @@ import deployerRepository from "@/api/deployerRepository";
 import {useRoute} from "vue-router";
 import {AppRsResponse, DeploymentResponse, Targets, DeploymentBatch} from "@/utils/response";
 import moment from "moment";
+import * as _ from "lodash";
 
 export interface Deploy {
   deploymentInfo: DeploymentResponse;
@@ -145,7 +149,8 @@ export default {
       },
       { dataIndex: 'Cluster', key: 'Cluster', slots: { customRender: 'Name' }, title: '集群名' },
       { key: 'CurrentState', slots: { customRender: 'currentState' }, title: '当前状态' },
-      { title: '操作', key: 'action', slots: { customRender: 'action' }, align: 'center'},
+      { key: 'SubTaskState', slots: { customRender: 'subTaskState' }, title: '子任务状态' },
+      { title: '操作', key: 'action', slots: { customRender: 'action' }, align: 'center' },
     ]
     const pagination = reactive({
       showSizeChanger: true
@@ -183,7 +188,8 @@ export default {
     }
 
     const rollback = async (record: AppRsResponse) => {
-      deployerRepository.confirmDeploymentReplicaSetStep(stateDeploy.deploymentId, record.ID, 'confirm_ok', 'NO')
+      await deployerRepository.confirmDeploymentReplicaSetStep(stateDeploy.deploymentId, record.ID, 'confirm_ok', 'NO')
+      refresh()
     }
 
     const showRollback = (id: number) => {
@@ -192,7 +198,8 @@ export default {
     }
 
     const deploy = async (record: AppRsResponse) => {
-      deployerRepository.confirmDeploymentReplicaSetStep(stateDeploy.deploymentId, record.ID, 'confirm_start', 'YES')
+      await deployerRepository.confirmDeploymentReplicaSetStep(stateDeploy.deploymentId, record.ID, 'confirm_start', 'YES')
+      refresh()
     }
 
     const showDeploy = (id: number) => {
@@ -201,7 +208,8 @@ export default {
     }
 
     const redeploy = async (record: AppRsResponse) => {
-      deployerRepository.redoDeploymentReplicaSetStep(stateDeploy.deploymentId, record.ID, 'confirm_start')
+      await deployerRepository.redoDeploymentReplicaSetStep(stateDeploy.deploymentId, record.ID, 'confirm_start')
+      refresh()
     }
 
     const showRedeploy = (id: number) => {
@@ -222,6 +230,7 @@ export default {
           console.error(e)
         }
       }
+      refresh()
     }
 
     const enableConfirmSuccess = (taskMap: {[key:number]: DeploymentBatch}) => {
@@ -243,6 +252,7 @@ export default {
           console.error(e)
         }
       }
+      refresh()
     }
 
     const enableCloseDeployment = (taskMap: {[key:number]: DeploymentBatch}) => {
@@ -261,7 +271,7 @@ export default {
         return '未知状态'
       }
 
-      const confirmStart =task.resolution.steps['confirm_start']
+      const confirmStart = task.resolution.steps['confirm_start']
       const confirmOK = task.resolution.steps['confirm_ok']
       const confirmRollback = task.resolution.steps['confirm_rollback']
 
@@ -285,6 +295,67 @@ export default {
       }
       if (confirmStart.state === 'BLOCKED') {
         return '等待发布'
+      }
+    }
+
+    const subTaskState = (r: AppRsResponse) => {
+      let task = stateDeploy.taskMap[r.ID]
+      if (task === null) {
+        return null
+      }
+
+      const targets = task.task.input['targets'] as any[]
+      const subTaskStates: any[] = _.map(targets, () => ({}))
+
+      const confirmStart = task.resolution.steps['confirm_start']
+      const confirmOK = task.resolution.steps['confirm_ok']
+      const confirmRollback = task.resolution.steps['confirm_rollback']
+
+      const deployForEachInstance = task.resolution.steps['deploy_for_each_instance']
+      const rollbackForEachInstance = task.resolution.steps['rollback_for_each_instance']
+
+      if (rollbackForEachInstance.children) {
+        const children = rollbackForEachInstance.children
+        _.each(subTaskStates, (s, i) => {
+          s.stage = 'rollback'
+          s.state = children[i]['state']
+        })
+        return subTaskStates
+      }
+
+      if (confirmOK.state === 'DONE' && confirmOK.output.value === 'NO') {
+        _.each(subTaskStates, (s, i) => {
+          s.stage = 'rollback'
+          s.state = 'TODO'
+
+          const subTask = task.resolution.steps[`rollback_for_each_instance-${i}`]
+          if (subTask) {
+            s.state = subTask.state
+          }
+        })
+        return subTaskStates
+      }
+
+      if (deployForEachInstance.children) {
+        const children = deployForEachInstance.children
+        _.each(subTaskStates, (s, i) => {
+          s.stage = 'deploy'
+          s.state = children[i]['state']
+        })
+        return subTaskStates
+      }
+
+      if (confirmOK.state === 'TODO') {
+        _.each(subTaskStates, (s, i) => {
+          s.stage = 'deploy'
+          s.state = 'TODO'
+
+          const subTask = task.resolution.steps[`deploy_for_each_instance-${i}`]
+          if (subTask) {
+            s.state = subTask.state
+          }
+        })
+        return subTaskStates
       }
     }
 
@@ -332,6 +403,7 @@ export default {
       closeDeployment,
       enableCloseDeployment,
       currentTaskState,
+      subTaskState,
       refresh,
     }
   }

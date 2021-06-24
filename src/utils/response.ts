@@ -173,6 +173,7 @@ export interface Step {
   tags: {
     [key:string]: string
   };
+  children?: any;
 }
 
 export interface Resolution {
