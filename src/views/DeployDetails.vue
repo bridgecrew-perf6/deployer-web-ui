@@ -260,25 +260,30 @@ export default {
       if (task === null) {
         return '未知状态'
       }
-      if (task.resolution.steps['confirm_rollback'].state === 'DONE') {
+
+      const confirmStart =task.resolution.steps['confirm_start']
+      const confirmOK = task.resolution.steps['confirm_ok']
+      const confirmRollback = task.resolution.steps['confirm_rollback']
+
+      if (confirmRollback.state === 'DONE') {
         return '回滚成功'
       }
-      if (task.resolution.steps['confirm_rollback'].state === 'BLOCKED') {
+      if (confirmRollback.state === 'BLOCKED') {
         return '回滚完成'
       }
-      if (task.resolution.steps['confirm_ok'].state === 'DONE' && task.resolution.steps['confirm_ok'].output['value'] !== 'YES') {
+      if (confirmOK.state === 'DONE' && confirmOK.output['value'] !== 'YES') {
         return '回滚中'
       }
-      if (task.resolution.steps['confirm_ok'].state === 'DONE' && task.resolution.steps['confirm_ok'].output['value'] === 'YES') {
+      if (confirmOK.state === 'DONE' && confirmOK.output['value'] === 'YES') {
         return '发布成功'
       }
-      if (task.resolution.steps['confirm_ok'].state === 'BLOCKED') {
+      if (confirmOK.state === 'BLOCKED') {
         return '发布完成'
       }
-      if (task.resolution.steps['confirm_start'].state === 'DONE') {
+      if (confirmStart.state === 'DONE') {
         return '发布中'
       }
-      if (task.resolution.steps['confirm_start'].state === 'BLOCKED') {
+      if (confirmStart.state === 'BLOCKED') {
         return '等待发布'
       }
     }
