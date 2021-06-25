@@ -43,7 +43,7 @@
     </ul>
   </div>
   <div>
-    <a-table :columns="columns" bordered :data-source="rsData" :pagination="pagination" :rowKey="record => record.ID">
+    <a-table :columns="columns" bordered :data-source="rsData" :pagination="false" :rowKey="record => record.ID">
       <template #name="{ text }">
         <a>{{ text }}</a>
       </template>
@@ -152,9 +152,6 @@ export default {
       { key: 'SubTaskState', slots: { customRender: 'subTaskState' }, title: '子任务状态' },
       { title: '操作', key: 'action', slots: { customRender: 'action' }, align: 'center' },
     ]
-    const pagination = reactive({
-      showSizeChanger: true
-    })
     const timer = ref()
 
     const queryDeploy = async () => {
@@ -386,7 +383,6 @@ export default {
     })
 
     return {
-      pagination,
       columns,
       appId,
       ...toRefs(stateDeploy),
