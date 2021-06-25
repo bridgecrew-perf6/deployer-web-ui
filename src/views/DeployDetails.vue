@@ -51,7 +51,7 @@
         <span>{{ text.Name }}</span>
       </template>
       <template #logic="{ record }">
-        <span> {{ record.LogicIdcEnv.LogicIdc.Name }}</span>
+        <span> {{ record.LogicIdcEnv.LogicIdc.Name }} </span>
       </template>
       <template #env="{ record }">
         <span> {{ record.LogicIdcEnv.Env.Name }}</span>
@@ -96,6 +96,19 @@
           </span>
         </div>
       </template>
+      <template #expandedRowRender="{ index, record }">
+        <a-table :columns="innerColumns" :data-source="InstancesData[index]" :pagination="false" :row-key="record => record.ID">
+          <template #name="{ text }">
+            <a>{{ text }}</a>
+          </template>
+          <template #status="{ index }">
+          <span>
+            <a-badge :status="subTaskState(record)[index].state === 'DONE' ? 'success' : 'processing'" />
+            {{ subTaskState(record)[index].state }}
+          </span>
+          </template>
+        </a-table>
+      </template>
     </a-table>
   </div>
   <div style="text-align: left; margin-top: 30px;">
@@ -111,7 +124,7 @@ import {onBeforeUnmount, onMounted, reactive, ref, toRefs, UnwrapRef, watch} fro
 import CommonHeader from "@/components/CommonHeader.vue";
 import deployerRepository from "@/api/deployerRepository";
 import {useRoute} from "vue-router";
-import {AppRsResponse, DeploymentResponse, Targets, DeploymentBatch} from "@/utils/response";
+import {AppRsResponse, DeploymentResponse, Targets, DeploymentBatch, InstanceTemplate} from "@/utils/response";
 import moment from "moment";
 import * as _ from "lodash";
 
@@ -120,6 +133,7 @@ export interface Deploy {
   taskMap: {[key:number]: DeploymentBatch}
   deploymentId: number;
   rsData: AppRsResponse[];
+  InstancesData: InstanceTemplate[][];
   autoRefresh: boolean;
 }
 
@@ -138,6 +152,7 @@ export default {
       taskMap: {},
       deploymentId: parseInt((route.query.deploymentId as string), 10),
       rsData: [],
+      InstancesData: [],
       autoRefresh: true,
     })
     const columns = [
@@ -157,6 +172,16 @@ export default {
       { key: 'SubTaskState', slots: { customRender: 'subTaskState' }, title: '子任务状态' },
       { title: '操作', key: 'action', slots: { customRender: 'action' }, align: 'center' },
     ]
+    const innerColumns = [
+      { dataIndex: 'Name', key: 'Name', title: '实例名' },
+      { dataIndex: 'HostInnerIP', key: 'HostInnerIP', title: '内网IP' },
+      { title: '状态', key: 'status', slots: { customRender: 'status' }, align: 'center' },
+      { dataIndex: 'User', key: 'User', title: '启动用户'},
+      { dataIndex: 'MetricEndpoint', key: 'MetricEndpoint', title: '监控采集接口' },
+      { dataIndex: 'DataDir', key: 'DataDir', title: '数据目录' },
+      { dataIndex: 'LogDir', key: 'LogDir', title: '日志目录' },
+      { dataIndex: 'WorkDir', key: 'WorkDir', title: '工作目录' },
+    ]
     const timer = ref()
 
     const queryDeploy = async () => {
@@ -170,9 +195,16 @@ export default {
         }, {} as {[key: number]: DeploymentBatch})
         const data = await queryRsByRsId() || []
         const rsIds = stateDeploy.deploymentInfo?.targets?.map((t: Targets) => t.ReplicaSetID) || []
-        stateDeploy.rsData = data.filter((d: AppRsResponse) => rsIds.includes(d.ID))
+        stateDeploy.InstancesData = []
+        stateDeploy.rsData = data.filter((d: AppRsResponse) => {
+          if (rsIds.includes(d.ID)) {
+            const instances = stateDeploy.deploymentInfo?.targets?.filter((t: Targets) => t.ReplicaSetID === d.ID)?.[0].Instances || []
+            stateDeploy.InstancesData.push(instances)
+            return d
+          }
+        })
 
-        // console.log(data, ';;;;;', rsIds, stateDeploy.rsData)
+        // console.log(data, ';;;;;', rsIds, stateDeploy.rsData, stateDeploy.taskMap)
       } catch (e) {
         console.error(e)
       }
@@ -308,6 +340,7 @@ export default {
 
       const targets = task.task.input['targets'] as any[]
       const subTaskStates: any[] = _.map(targets, () => ({}))
+      // console.log(_.map(targets, () => ({})))
 
       const confirmStart = task.resolution.steps['confirm_start']
       const confirmOK = task.resolution.steps['confirm_ok']
@@ -389,6 +422,7 @@ export default {
 
     return {
       columns,
+      innerColumns,
       appId,
       ...toRefs(stateDeploy),
       timeFormat,

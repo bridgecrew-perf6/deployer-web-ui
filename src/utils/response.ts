@@ -18,7 +18,7 @@ export interface BindInfos {
 export interface InstanceTemplate {
   BindInfos?: BindInfos[];
   DataDir?: string;
-  EnvVars: {[key: string]: string}[]
+  EnvVars?: {[key: string]: string}[]
   LogDir?: string;
   MetricEndpoint?: string;
   User?: string;
