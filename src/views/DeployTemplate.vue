@@ -66,7 +66,7 @@
 
 <script lang="ts">
 import {onMounted, reactive, ref, toRefs, UnwrapRef} from "vue";
-import {message} from 'ant-design-vue';
+import {message, Modal} from 'ant-design-vue';
 import CommonHeader from "@/components/CommonHeader.vue";
 import {appState} from "@/utils/store";
 import {useRoute, useRouter} from "vue-router";
@@ -191,11 +191,18 @@ export default {
 
       try {
         const data = await deployerRepository.addDeploymentByAppId(appId.value, value)
-        await message.success('success!')
-        await router.push({
-          path: `deploy-list/${appId.value}/details`,
-          query: { deploymentId:  data.id},
-        })
+        const modal = Modal.success({
+          title: '新建发布成功',
+          content: 'success！',
+          okText: '我知道了',
+        });
+        setTimeout(() => {
+          modal.destroy();
+          router.push({
+            path: `deploy-list/${appId.value}/details`,
+            query: { deploymentId:  data.id},
+          })
+        }, 3000);
       } catch (e) {
         console.error(e)
       }
