@@ -1,6 +1,6 @@
 <template>
 <div>
-  <CommonHeader :app-id="appId" />
+  <CommonHeader :app-id="appId" :add-deploy="true"/>
   <div>
     <a-table :columns="columns" :data-source="deployData"
              @change="paginationChange"

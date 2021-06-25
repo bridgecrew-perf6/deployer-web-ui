@@ -69,7 +69,7 @@ import {onMounted, reactive, ref, toRefs, UnwrapRef} from "vue";
 import {message} from 'ant-design-vue';
 import CommonHeader from "@/components/CommonHeader.vue";
 import {appState} from "@/utils/store";
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import deployerRepository from "@/api/deployerRepository";
 import CommonTree from "@/components/CommonTree.vue";
 import CommonForm from '@/components/CommonForm.vue';
@@ -101,6 +101,7 @@ export default {
   },
   setup() {
     const route = useRoute()
+    const router = useRouter()
     // console.log(route.query.appId, '[[[[')
     // const { appInfo } = toRefs(appState)
     const appId = ref(parseInt(route.query.appId as string, 10))
@@ -187,10 +188,14 @@ export default {
       const value: any = {...state}
       value.CurrentRelease = Number(value.CurrentRelease) || 0
       value.TargetRelease = Number(value.TargetRelease) || 0
-      const appId = parseInt((route.query.appId as string), 10)
+
       try {
-        await deployerRepository.addDeploymentByAppId(appId, value)
-        message.success('success!')
+        const data = await deployerRepository.addDeploymentByAppId(appId.value, value)
+        await message.success('success!')
+        await router.push({
+          path: `deploy-list/${appId.value}/details`,
+          query: { deploymentId:  data.id},
+        })
       } catch (e) {
         console.error(e)
       }
