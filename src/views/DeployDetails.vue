@@ -97,7 +97,7 @@
         </div>
       </template>
       <template #expandedRowRender="{ index, record }">
-        <a-table :columns="innerColumns" :data-source="InstancesData[index]" :pagination="false" :row-key="record => record.ID">
+        <a-table style="margin-left: 343px;width: auto;" :columns="innerColumns" :data-source="InstancesData[index]" :pagination="false" :row-key="record => record.ID">
           <template #name="{ text }">
             <a>{{ text }}</a>
           </template>
@@ -160,9 +160,9 @@ export default {
         dataIndex: 'LogicIdcEnv', key: 'LogicIdcEnv', title: '机房环境',
         children: [
           {title: '机房', key: 'LogicIdc', dataIndex: 'LogicIdc',
-            slots: { customRender: 'logic' }, align: 'center',
+            slots: { customRender: 'logic' }, align: 'center', width: 180
           },
-          {title: '环境', key: 'Env', dataIndex: 'Env',
+          {title: '环境', key: 'Env', dataIndex: 'Env', width: 180,
             slots: { customRender: 'env' }, align: 'center',
           }
         ],
@@ -176,11 +176,11 @@ export default {
       { dataIndex: 'Name', key: 'Name', title: '实例名' },
       { dataIndex: 'HostInnerIP', key: 'HostInnerIP', title: '内网IP' },
       { title: '状态', key: 'status', slots: { customRender: 'status' }, align: 'center' },
-      { dataIndex: 'User', key: 'User', title: '启动用户'},
-      { dataIndex: 'MetricEndpoint', key: 'MetricEndpoint', title: '监控采集接口' },
-      { dataIndex: 'DataDir', key: 'DataDir', title: '数据目录' },
-      { dataIndex: 'LogDir', key: 'LogDir', title: '日志目录' },
-      { dataIndex: 'WorkDir', key: 'WorkDir', title: '工作目录' },
+      // { dataIndex: 'User', key: 'User', title: '启动用户'},
+      // { dataIndex: 'MetricEndpoint', key: 'MetricEndpoint', title: '监控采集接口' },
+      // { dataIndex: 'DataDir', key: 'DataDir', title: '数据目录' },
+      // { dataIndex: 'LogDir', key: 'LogDir', title: '日志目录' },
+      // { dataIndex: 'WorkDir', key: 'WorkDir', title: '工作目录' },
     ]
     const timer = ref()
 
@@ -459,4 +459,5 @@ export default {
     }
   }
 }
+
 </style>
