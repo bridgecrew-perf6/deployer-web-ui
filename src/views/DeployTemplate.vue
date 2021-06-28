@@ -36,12 +36,12 @@
 <!--            <a-input v-model:value="state.CurrentRelease" placeholder="输入release号"/>-->
 <!--          </a-form-item>-->
 <!--        </a-form>-->
-        <CommonForm :form-state="state" />
+        <CommonForm :form-state="state" :app-id="appId" />
       </div>
       <div v-else class="steps-content-content">
         <CommonTree :nodes-data="nodeTreeData" :disabled="true" />
         <div style="margin-top: 20px; margin-bottom: 20px;">
-          <CommonForm :form-state="state" :disabled="true" />
+          <CommonForm :form-state="state" :disabled="true" :app-id="appId"/>
         </div>
         <a-textarea v-model:value="state.Comment" auto-size placeholder="请输入备注" :rows="1" />
       </div>
@@ -130,6 +130,10 @@ export default {
           message.warning('目标版本必填')
           return
         }
+        if (!state.CurrentVersion) {
+          message.warning('当前版本必填')
+          return
+        }
         if (state.TargetRelease && isNaN(state.TargetRelease)) {
           message.warning('release为整数')
           return
@@ -183,14 +187,6 @@ export default {
         console.error(e)
       }
     }
-    const getPackages = async () => {
-      try {
-        const data = await deployerRepository.queryPackage(appId.value);
-        console.log(data, ';;;===');
-      } catch (e) {
-        console.error(e)
-      }
-    }
 
     const addDeployment = async () => {
       const value: any = {...state}
@@ -218,7 +214,6 @@ export default {
 
     onMounted(() => {
       getRs()
-      getPackages()
     })
 
     return {
