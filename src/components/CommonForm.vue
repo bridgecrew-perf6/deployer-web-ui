@@ -12,7 +12,7 @@
         :disabled="disabled"
         @select="selectTarget"
       >
-        <a-select-option v-for="option in packageList" :key="option.Version + option.Release" :value="option.Version">{{ option.Version }} - {{ option.Release}}</a-select-option>
+        <a-select-option v-for="option in packageList" :key="option.Version + option.Release" :value="option.Version" :title="option.Release">{{ option.Version }} - {{ option.Release}}</a-select-option>
       </a-select>
 <!--      <a-input v-model:value="state.TargetVersion" placeholder="输入版本" :disabled="disabled" />-->
     </a-form-item>
@@ -33,7 +33,7 @@
         :disabled="disabled"
         @select="selectCurrent"
       >
-        <a-select-option v-for="option in packageList" :key="option.Version + option.Release" :value="option.Version">{{ option.Version }} - {{ option.Release}}</a-select-option>
+        <a-select-option v-for="option in packageList" :key="option.Version + option.Release" :value="option.Version" :title="option.Release">{{ option.Version }} - {{ option.Release}}</a-select-option>
       </a-select>
 <!--      <a-input v-model:value="state.CurrentVersion" placeholder="输入版本" :disabled="disabled" />-->
     </a-form-item>
@@ -48,7 +48,6 @@ import {onMounted, reactive, ref, toRefs} from "vue";
 import {RuleObject} from "ant-design-vue/es/form/interface";
 import deployerRepository from "@/api/deployerRepository";
 import {Packages} from "@/utils/response";
-import {Option} from "ant-design-vue/es/vc-util/Children/toArray";
 import * as _ from "lodash";
 
 export default {
@@ -86,11 +85,11 @@ export default {
         console.error(e)
       }
     }
-    const selectTarget = (value: string) => {
-      state.TargetRelease = packageList.value?.filter(f => f.Version === value)?.[0].Release
+    const selectTarget = (value: string, option: any) => {
+      state.TargetRelease = option.title
     }
-    const selectCurrent = (value: string) => {
-      state.CurrentRelease = packageList.value?.filter(f => f.Version === value)?.[0].Release
+    const selectCurrent = (value: string, option: any) => {
+      state.CurrentRelease = option.title
     }
     // console.log(state)
 
