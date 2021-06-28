@@ -60,7 +60,7 @@
         {{ currentTaskState(record) }}
       </template>
       <template #subTaskState="{ record }">
-        {{ subTaskState(record) }}
+        {{ subTaskStateSummary(record) }}
       </template>
       <template #action="{ record }">
         <div>
@@ -394,6 +394,13 @@ export default {
       }
     }
 
+    const subTaskStateSummary = (r: AppRsResponse) => {
+      const subs = subTaskState(r) || []
+      const total = subs.length
+      const done = _.filter(subs, (s) => s.state === 'DONE').length
+      return `${done}/${total}`
+    }
+
     const watchRefresh = () => {
       timer.value = setInterval(() => {
         if (stateDeploy.autoRefresh) {
@@ -439,6 +446,7 @@ export default {
       enableCloseDeployment,
       currentTaskState,
       subTaskState,
+      subTaskStateSummary,
       refresh,
     }
   }
