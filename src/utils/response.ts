@@ -28,6 +28,10 @@ export interface InstanceTemplate {
   ID?: number;
   Name?: string;
 }
+export interface Packages {
+  Release?: number;
+  Version?: string;
+}
 
 export interface BizResponse {
   Comment?: string;

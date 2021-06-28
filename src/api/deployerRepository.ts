@@ -1,7 +1,7 @@
 import request from "@/utils/request";
 import {
-    AppRsResponse, BarItem, BizAppResponse, BizResponse,
-    DeploymentResponse, LoginResponse, Page, DeploymentBatch
+  AppRsResponse, BarItem, BizAppResponse, BizResponse,
+  DeploymentResponse, LoginResponse, Page, DeploymentBatch, Packages
 } from "@/utils/response";
 
 
@@ -21,24 +21,25 @@ if (window.location.hostname.endsWith('dev.ops.sumscope.com')) {
 }
 
 export default {
-    queryBar: () => request.get<BarItem[]>(`${ApiBar}`),
-    login: () => request.get<LoginResponse>(`${ApiLogin}`),
+  queryBar: () => request.get<BarItem[]>(`${ApiBar}`),
+  login: () => request.get<LoginResponse>(`${ApiLogin}`),
 
-    getBiz: () => request.get<BizResponse[]>(`${ApiBiz}`),
-    getBizAllApp: (bizId: number) => request.get<BizAppResponse[]>(`${ApiBiz}/${bizId}/app`),
-    getAppByAppId: (appId: number) => request.get<BizAppResponse>(`${ApiApp}/${appId}`),
-    getAllRsByAppId: (appId: number) => request.get<AppRsResponse[]>(`${ApiApp}/${appId}/rs`),
+  getBiz: () => request.get<BizResponse[]>(`${ApiBiz}`),
+  getBizAllApp: (bizId: number) => request.get<BizAppResponse[]>(`${ApiBiz}/${bizId}/app`),
+  getAppByAppId: (appId: number) => request.get<BizAppResponse>(`${ApiApp}/${appId}`),
+  getAllRsByAppId: (appId: number) => request.get<AppRsResponse[]>(`${ApiApp}/${appId}/rs`),
+  queryPackage: (appId: number) => request.get<Packages[]>(`${ApiApp}/${appId}/packages`),
 
-    addDeploymentByAppId: (appId: number, params: any) => request.post<DeploymentResponse>(`${ApiApp}/${appId}/deployment`, params),
-    deploymentList: (appId: number, params?: any) => request.get<Page>(`${ApiApp}/${appId}/deployment`, params),
+  addDeploymentByAppId: (appId: number, params: any) => request.post<DeploymentResponse>(`${ApiApp}/${appId}/deployment`, params),
+  deploymentList: (appId: number, params?: any) => request.get<Page>(`${ApiApp}/${appId}/deployment`, params),
 
-    queryDeployByDid: (deploymentId: number) => request.get<DeploymentResponse>(`${ApiDeploy}/${deploymentId}`),
+  queryDeployByDid: (deploymentId: number) => request.get<DeploymentResponse>(`${ApiDeploy}/${deploymentId}`),
 
-    getDeploymentBatchById: (deploymentId: number) => request.get<DeploymentBatch[]>(`${ApiDeploy}/${deploymentId}/batch`),
+  getDeploymentBatchById: (deploymentId: number) => request.get<DeploymentBatch[]>(`${ApiDeploy}/${deploymentId}/batch`),
 
-    confirmDeploymentReplicaSetStep: (deploymentId: number, rsId: number, stepName: string, value: string) =>
-        request.put<void>(`${ApiDeploy}/${deploymentId}/batch/replicaset/${rsId}/step/${stepName}/confirm`, {value}),
+  confirmDeploymentReplicaSetStep: (deploymentId: number, rsId: number, stepName: string, value: string) =>
+    request.put<void>(`${ApiDeploy}/${deploymentId}/batch/replicaset/${rsId}/step/${stepName}/confirm`, {value}),
 
-    redoDeploymentReplicaSetStep: (deploymentId: number, rsId: number, stepName: string) =>
-        request.post<void>(`${ApiDeploy}/${deploymentId}/batch/replicaset/${rsId}/step/${stepName}/redo`, {})
+  redoDeploymentReplicaSetStep: (deploymentId: number, rsId: number, stepName: string) =>
+    request.post<void>(`${ApiDeploy}/${deploymentId}/batch/replicaset/${rsId}/step/${stepName}/redo`, {})
 }

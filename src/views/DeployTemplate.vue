@@ -183,6 +183,14 @@ export default {
         console.error(e)
       }
     }
+    const getPackages = async () => {
+      try {
+        const data = await deployerRepository.queryPackage(appId.value);
+        console.log(data, ';;;===');
+      } catch (e) {
+        console.error(e)
+      }
+    }
 
     const addDeployment = async () => {
       const value: any = {...state}
@@ -210,6 +218,7 @@ export default {
 
     onMounted(() => {
       getRs()
+      getPackages()
     })
 
     return {
