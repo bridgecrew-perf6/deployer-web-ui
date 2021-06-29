@@ -14,7 +14,7 @@ const vueConfig = {
         target: 'http://172.16.97.194:7006',
       },
       '/api/my/': {
-        target: 'http://127.0.0.1:3000',
+        target: 'http://172.16.97.194:3000',
       }
     },
     watchOptions: {
