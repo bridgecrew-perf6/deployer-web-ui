@@ -112,8 +112,8 @@
     </a-table>
   </div>
   <div style="text-align: left; margin-top: 30px;">
-    <a-button>
-      <router-link :to="{ path: '/cd/biz/deploy-list', query: { appId: appId }}" >发布列表</router-link>
+    <a-button type="primary">
+      <router-link :to="{ path: '/cd/biz/deploy-list', query: { appId: appId }}" >返回发布列表</router-link>
     </a-button>
   </div>
 </div>
