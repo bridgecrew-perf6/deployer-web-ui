@@ -174,7 +174,7 @@ export default {
 }
 
 .logo {
-  min-width: 120px;
+  min-width: 130px;
   height: 58px;
   float: left;
   color: #fff;
@@ -210,6 +210,7 @@ export default {
 .layout /deep/ .ant-layout-header {
   height: 58px;
   display: flex;
+  padding: 0 40px;
 }
 .menu-side {
   text-align: left;
