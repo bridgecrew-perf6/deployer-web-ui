@@ -1,7 +1,10 @@
 <template>
   <a-layout class="layout">
     <a-layout-header class="header">
-      <div class="logo" >logo</div>
+      <div class="logo" >
+        <img src="http://www.sumscope.com/favicon.ico" alt="">
+        DEPLOYER
+      </div>
       <div class="layout-header-menu">
         <a-menu
             theme="dark"
@@ -178,6 +181,10 @@ export default {
   margin-right: 30px;
   text-align: left;
   font-weight: 500;
+  line-height: 58px;
+  img {
+    width: 45px;
+  }
 }
 .layout-header-menu {
   display: flex;
