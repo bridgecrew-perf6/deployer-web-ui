@@ -21,12 +21,13 @@ const vueConfig = {
       ignored: ['**/node_modules', '**/.#*']
     },
   },
+  runtimeCompiler: true,
   css: {
     loaderOptions: {
       less: {
         javascriptEnabled: true,
       }
-    }
+    },
   }
 };
 
