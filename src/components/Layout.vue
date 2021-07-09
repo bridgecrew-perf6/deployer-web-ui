@@ -128,7 +128,7 @@ export default {
       router.push('/login')
     }
     const filterOptionBiz = (input: string, option: any) => {
-      console.log(input, option)
+      // console.log(input, option)
       return option.title.toLowerCase().indexOf(input.toLowerCase()) >= 0
     }
 
