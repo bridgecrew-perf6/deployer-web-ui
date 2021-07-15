@@ -25,25 +25,25 @@
 <!--          <a-menu-item key="5">监控中心</a-menu-item>-->
 <!--          <a-menu-item key="6">日志中心</a-menu-item>-->
         </a-menu>
-        <section>
-          <a-avatar class="user-avatar">
-            <template #icon><UserOutlined /></template>
-          </a-avatar>
-          <a-dropdown>
-            <a class="ant-dropdown-link" @click.prevent>
-              {{ username }}
-              <DownOutlined />
-            </a>
-            <template #overlay>
-              <a-menu>
-                <a-menu-item>
-                  <a @click="logout()">退出</a>
-                </a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown>
-        </section>
       </div>
+      <section class="header-right">
+        <a-avatar class="user-avatar">
+          <template #icon><UserOutlined /></template>
+        </a-avatar>
+        <a-dropdown>
+          <a class="ant-dropdown-link" @click.prevent>
+            {{ username }}
+            <DownOutlined />
+          </a>
+          <template #overlay>
+            <a-menu>
+              <a-menu-item>
+                <a @click="logout()">退出</a>
+              </a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
+      </section>
     </a-layout-header>
     <a-layout>
       <a-layout-sider width="200" style="background: #fff">
@@ -198,12 +198,19 @@ export default {
   justify-content: space-between;
   align-items: center;
   flex: 1;
-  ul, section {
+  overflow: auto;
+  ul {
     white-space: nowrap;
   }
-  .user-avatar {
-    margin-right: 4px;
-  }
+}
+.user-avatar {
+  margin-right: 4px;
+}
+.header-right {
+  white-space: nowrap;
+  float: right;
+  margin-left: 10px;
+  line-height: 58px;
 }
 .layout-header-menu /deep/ .ant-menu-dark .ant-menu-item:hover {
   background-color: #1890ff;
