@@ -18,6 +18,7 @@ import {
   Popconfirm,
   Switch, Badge, ConfigProvider, Card,
 } from "ant-design-vue";
+// import menuUi from 'sara-menu-header-ui'
 
 const app = createApp(App)
 app.use(router)
@@ -38,5 +39,7 @@ app.use(Switch)
 app.use(Badge)
 app.use(ConfigProvider)
 app.use(Card)
+
+// app.use(menuUi)
 
 app.mount('#app')

@@ -73,7 +73,6 @@
         </a-menu>
       </a-layout-sider>
       <a-layout-content class="common-content">
-<!--        <MenuHeaderUi />-->
         <router-view></router-view>
       </a-layout-content>
     </a-layout>
@@ -88,7 +87,6 @@ import bizRepositories from "@/composable/bizRepositories";
 import jwtDecode from "jwt-decode";
 import deployerRepository from "@/api/deployerRepository";
 import {BarItem} from "@/utils/response";
-// import MenuHeaderUi from 'menu-header-ui'
 
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_2598067_jca7prjkbw.js'
@@ -100,10 +98,6 @@ export default {
     IconFont,
     UserOutlined,
     DownOutlined,
-    // MenuHeaderUi,
-    // myMenu: defineAsyncComponent(() =>
-    //   import('../')
-    // )
   },
   setup() {
     const route = useRoute()
