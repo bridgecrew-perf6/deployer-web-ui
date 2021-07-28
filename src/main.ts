@@ -18,7 +18,7 @@ import {
   Popconfirm,
   Switch, Badge, ConfigProvider, Card,
 } from "ant-design-vue";
-// import {MenuHeader} from 'menu-header-component/dist/menu-header-component.common'
+// import MenuHeader from 'menu-header-component'
 
 const app = createApp(App)
 app.use(router)
