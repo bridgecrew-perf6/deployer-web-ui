@@ -73,6 +73,7 @@
         </a-menu>
       </a-layout-sider>
       <a-layout-content class="common-content">
+        <HeaderComponent />
         <router-view></router-view>
       </a-layout-content>
     </a-layout>
