@@ -1,50 +1,51 @@
 <template>
   <a-layout class="layout">
-    <a-layout-header class="header">
-      <div class="logo" >
-        <img src="http://www.sumscope.com/favicon.ico" alt="">
-        DEPLOYER
-      </div>
-      <div class="layout-header-menu">
-        <a-menu
-            theme="dark"
-            mode="horizontal"
-            v-model:selectedKeys="selectedKey"
-            :style="{ lineHeight: '58px' }"
-        >
-          <a-menu-item v-for="bar in menuBar" :key="bar.route">
-            <a :href="bar.path">{{ bar.name }}</a>
-          </a-menu-item>
-<!--          <a-menu-item>-->
-<!--            <a href="http://127.0.0.1:4203">运维工具箱</a>-->
+<!--    <a-layout-header class="header">-->
+<!--      <div class="logo" >-->
+<!--        <img src="http://www.sumscope.com/favicon.ico" alt="">-->
+<!--        DEPLOYER-->
+<!--      </div>-->
+<!--      <div class="layout-header-menu">-->
+<!--        <a-menu-->
+<!--            theme="dark"-->
+<!--            mode="horizontal"-->
+<!--            v-model:selectedKeys="selectedKey"-->
+<!--            :style="{ lineHeight: '58px' }"-->
+<!--        >-->
+<!--          <a-menu-item v-for="bar in menuBar" :key="bar.route">-->
+<!--            <a :href="bar.path">{{ bar.name }}</a>-->
 <!--          </a-menu-item>-->
-<!--          <a-menu-item key="3">CI</a-menu-item>-->
-<!--          <a-menu-item key="/">-->
-<!--            <router-link to="/">CD</router-link>-->
-<!--          </a-menu-item>-->
-<!--          <a-menu-item key="5">监控中心</a-menu-item>-->
-<!--          <a-menu-item key="6">日志中心</a-menu-item>-->
-        </a-menu>
-      </div>
-      <section class="header-right">
-        <a-avatar class="user-avatar">
-          <template #icon><UserOutlined /></template>
-        </a-avatar>
-        <a-dropdown>
-          <a class="ant-dropdown-link" @click.prevent>
-            {{ username }}
-            <DownOutlined />
-          </a>
-          <template #overlay>
-            <a-menu>
-              <a-menu-item>
-                <a @click="logout()">退出</a>
-              </a-menu-item>
-            </a-menu>
-          </template>
-        </a-dropdown>
-      </section>
-    </a-layout-header>
+<!--&lt;!&ndash;          <a-menu-item>&ndash;&gt;-->
+<!--&lt;!&ndash;            <a href="http://127.0.0.1:4203">运维工具箱</a>&ndash;&gt;-->
+<!--&lt;!&ndash;          </a-menu-item>&ndash;&gt;-->
+<!--&lt;!&ndash;          <a-menu-item key="3">CI</a-menu-item>&ndash;&gt;-->
+<!--&lt;!&ndash;          <a-menu-item key="/">&ndash;&gt;-->
+<!--&lt;!&ndash;            <router-link to="/">CD</router-link>&ndash;&gt;-->
+<!--&lt;!&ndash;          </a-menu-item>&ndash;&gt;-->
+<!--&lt;!&ndash;          <a-menu-item key="5">监控中心</a-menu-item>&ndash;&gt;-->
+<!--&lt;!&ndash;          <a-menu-item key="6">日志中心</a-menu-item>&ndash;&gt;-->
+<!--        </a-menu>-->
+<!--      </div>-->
+<!--      <section class="header-right">-->
+<!--        <a-avatar class="user-avatar">-->
+<!--          <template #icon><UserOutlined /></template>-->
+<!--        </a-avatar>-->
+<!--        <a-dropdown>-->
+<!--          <a class="ant-dropdown-link" @click.prevent>-->
+<!--            {{ username }}-->
+<!--            <DownOutlined />-->
+<!--          </a>-->
+<!--          <template #overlay>-->
+<!--            <a-menu>-->
+<!--              <a-menu-item>-->
+<!--                <a @click="logout()">退出</a>-->
+<!--              </a-menu-item>-->
+<!--            </a-menu>-->
+<!--          </template>-->
+<!--        </a-dropdown>-->
+<!--      </section>-->
+<!--    </a-layout-header>-->
+    <HeaderComponent :logoTitle="'DEPLOYER'" />
     <a-layout>
       <a-layout-sider width="200" style="background: #fff">
         <div class="select-menu-contain">
@@ -73,7 +74,6 @@
         </a-menu>
       </a-layout-sider>
       <a-layout-content class="common-content">
-        <HeaderComponent :logoTitle="'DEPLOYER'" />
         <router-view></router-view>
       </a-layout-content>
     </a-layout>
@@ -97,8 +97,8 @@ export default {
   name: "Layout",
   components: {
     IconFont,
-    UserOutlined,
-    DownOutlined,
+    // UserOutlined,
+    // DownOutlined,
   },
   setup() {
     const route = useRoute()
@@ -116,47 +116,47 @@ export default {
       {id: 1, icon: 'icon-home', path: 'biz', name: '总览'},
       {id: 2, icon: 'icon-about', path: 'about', name: '关于' },
     ])
-    const menuBar = ref<BarItem[]>([])
+    // const menuBar = ref<BarItem[]>([])
 
-    const logout = () => {
-      localStorage.removeItem('token')
-      router.push('/login')
-    }
+    // const logout = () => {
+    //   localStorage.removeItem('token')
+    //   router.push('/login')
+    // }
     const filterOptionBiz = (input: string, option: any) => {
       // console.log(input, option)
       return option.title.toLowerCase().indexOf(input.toLowerCase()) >= 0
     }
 
-    const getBar = async () => {
-      try {
-        menuBar.value = await deployerRepository.queryBar()
-      } catch (e) {
-        console.error(e)
-      }
-    }
+    // const getBar = async () => {
+    //   try {
+    //     menuBar.value = await deployerRepository.queryBar()
+    //   } catch (e) {
+    //     console.error(e)
+    //   }
+    // }
 
     // watch(() => route.path, (value) => {
     //   const url = value.split('/')
     //   state.selectedKeysMenu = [url[2]]
     // })
 
-    onMounted(() => {
-      getBar()
-
-      const token = localStorage.getItem('token')
-      if (token) {
-        const userInfo = jwtDecode<{[key: string]: string}>(token)
-        state.username = userInfo?.name || userInfo?.username
-      }
-    })
+    // onMounted(() => {
+    //   getBar()
+    //
+    //   const token = localStorage.getItem('token')
+    //   if (token) {
+    //     const userInfo = jwtDecode<{[key: string]: string}>(token)
+    //     state.username = userInfo?.name || userInfo?.username
+    //   }
+    // })
 
     return {
       bizId,
       bizList,
       ...toRefs(state),
       bar,
-      menuBar,
-      logout,
+      // menuBar,
+      // logout,
       filterOptionBiz,
     }
   }
