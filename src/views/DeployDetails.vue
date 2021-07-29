@@ -103,8 +103,8 @@
           </template>
           <template #status="{ index }">
           <span>
-            <a-badge :status="subTaskState(record)[index].state === 'DONE' ? 'success' : 'processing'" />
-            {{ subTaskState(record)[index].state }}
+            <a-badge :status="subTaskState(record)?.[index]?.state === 'DONE' ? 'success' : 'processing'" />
+            {{ subTaskState(record)?.[index]?.state }}
           </span>
           </template>
         </a-table>
@@ -204,7 +204,7 @@ export default {
           }
         })
 
-        // console.log(data, ';;;;;', rsIds, stateDeploy.rsData, stateDeploy.taskMap)
+        // console.log(data, ';;;;;', rsIds, stateDeploy.rsData, stateDeploy.taskMap, stateDeploy)
       } catch (e) {
         console.error(e)
       }
@@ -227,7 +227,7 @@ export default {
     }
 
     const showRollback = (id: number) => {
-      const task = stateDeploy.taskMap[id]
+      const task = stateDeploy.taskMap?.[id]
       return task && task.resolution.steps['confirm_ok'].state === 'BLOCKED'
     }
 
@@ -237,7 +237,7 @@ export default {
     }
 
     const showDeploy = (id: number) => {
-      const task = stateDeploy.taskMap[id]
+      const task = stateDeploy.taskMap?.[id]
       return task && task.resolution.steps['confirm_start'].state === 'BLOCKED'
     }
 
@@ -247,7 +247,7 @@ export default {
     }
 
     const showRedeploy = (id: number) => {
-      const task = stateDeploy.taskMap[id]
+      const task = stateDeploy.taskMap?.[id]
       return task && task.resolution.steps['confirm_rollback'].state === 'BLOCKED'
     }
 
@@ -300,97 +300,105 @@ export default {
     }
 
     const currentTaskState = (r: AppRsResponse) => {
-      let task = stateDeploy.taskMap[r.ID]
-      if (task === null) {
-        return '未知状态'
-      }
+      try {
+        let task = stateDeploy.taskMap?.[r.ID]
+        if (task === null || task === undefined) {
+          return '未知状态'
+        }
 
-      const confirmStart = task.resolution.steps['confirm_start']
-      const confirmOK = task.resolution.steps['confirm_ok']
-      const confirmRollback = task.resolution.steps['confirm_rollback']
+        const confirmStart = task?.resolution?.steps['confirm_start']
+        const confirmOK = task?.resolution?.steps['confirm_ok']
+        const confirmRollback = task?.resolution?.steps['confirm_rollback']
 
-      if (confirmRollback.state === 'DONE') {
-        return '回滚成功'
-      }
-      if (confirmRollback.state === 'BLOCKED') {
-        return '回滚完成'
-      }
-      if (confirmOK.state === 'DONE' && confirmOK.output['value'] !== 'YES') {
-        return '回滚中'
-      }
-      if (confirmOK.state === 'DONE' && confirmOK.output['value'] === 'YES') {
-        return '发布成功'
-      }
-      if (confirmOK.state === 'BLOCKED') {
-        return '发布完成'
-      }
-      if (confirmStart.state === 'DONE') {
-        return '发布中'
-      }
-      if (confirmStart.state === 'BLOCKED') {
-        return '等待发布'
+        if (confirmRollback.state === 'DONE') {
+          return '回滚成功'
+        }
+        if (confirmRollback.state === 'BLOCKED') {
+          return '回滚完成'
+        }
+        if (confirmOK.state === 'DONE' && confirmOK.output['value'] !== 'YES') {
+          return '回滚中'
+        }
+        if (confirmOK.state === 'DONE' && confirmOK.output['value'] === 'YES') {
+          return '发布成功'
+        }
+        if (confirmOK.state === 'BLOCKED') {
+          return '发布完成'
+        }
+        if (confirmStart.state === 'DONE') {
+          return '发布中'
+        }
+        if (confirmStart.state === 'BLOCKED') {
+          return '等待发布'
+        }
+      } catch (e) {
+        console.error(e)
       }
     }
 
     const subTaskState = (r: AppRsResponse) => {
-      let task = stateDeploy.taskMap[r.ID]
-      if (task === null) {
-        return null
-      }
+      try {
+        let task = stateDeploy.taskMap?.[r.ID]
+        if (task === null || task === undefined) {
+          return null
+        }
 
-      const targets = task.task.input['targets'] as any[]
-      const subTaskStates: any[] = _.map(targets, () => ({}))
-      // console.log(_.map(targets, () => ({})))
+        const targets = task?.task?.input['targets'] as any[]
+        const subTaskStates: any[] = _.map(targets, () => ({}))
+        // console.log(_.map(targets, () => ({})))
 
-      const confirmStart = task.resolution.steps['confirm_start']
-      const confirmOK = task.resolution.steps['confirm_ok']
-      const confirmRollback = task.resolution.steps['confirm_rollback']
+        const confirmStart = task?.resolution?.steps['confirm_start']
+        const confirmOK = task?.resolution?.steps['confirm_ok']
+        const confirmRollback = task?.resolution?.steps['confirm_rollback']
 
-      const deployForEachInstance = task.resolution.steps['deploy_for_each_instance']
-      const rollbackForEachInstance = task.resolution.steps['rollback_for_each_instance']
+        const deployForEachInstance = task?.resolution?.steps['deploy_for_each_instance']
+        const rollbackForEachInstance = task?.resolution?.steps['rollback_for_each_instance']
 
-      if (rollbackForEachInstance.children) {
-        const children = rollbackForEachInstance.children
-        _.each(subTaskStates, (s, i) => {
-          s.stage = 'rollback'
-          s.state = children[i]['state']
-        })
-        return subTaskStates
-      }
+        if (rollbackForEachInstance.children) {
+          const children = rollbackForEachInstance.children
+          _.each(subTaskStates, (s, i) => {
+            s.stage = 'rollback'
+            s.state = children[i]['state']
+          })
+          return subTaskStates
+        }
 
-      if (confirmOK.state === 'DONE' && confirmOK.output.value === 'NO') {
-        _.each(subTaskStates, (s, i) => {
-          s.stage = 'rollback'
-          s.state = 'TODO'
+        if (confirmOK.state === 'DONE' && confirmOK.output.value === 'NO') {
+          _.each(subTaskStates, (s, i) => {
+            s.stage = 'rollback'
+            s.state = 'TODO'
 
-          const subTask = task.resolution.steps[`rollback_for_each_instance-${i}`]
-          if (subTask) {
-            s.state = subTask.state
-          }
-        })
-        return subTaskStates
-      }
+            const subTask = task.resolution.steps[`rollback_for_each_instance-${i}`]
+            if (subTask) {
+              s.state = subTask.state
+            }
+          })
+          return subTaskStates
+        }
 
-      if (deployForEachInstance.children) {
-        const children = deployForEachInstance.children
-        _.each(subTaskStates, (s, i) => {
-          s.stage = 'deploy'
-          s.state = children[i]['state']
-        })
-        return subTaskStates
-      }
+        if (deployForEachInstance.children) {
+          const children = deployForEachInstance.children
+          _.each(subTaskStates, (s, i) => {
+            s.stage = 'deploy'
+            s.state = children[i]['state']
+          })
+          return subTaskStates
+        }
 
-      if (confirmOK.state === 'TODO') {
-        _.each(subTaskStates, (s, i) => {
-          s.stage = 'deploy'
-          s.state = 'TODO'
+        if (confirmOK.state === 'TODO') {
+          _.each(subTaskStates, (s, i) => {
+            s.stage = 'deploy'
+            s.state = 'TODO'
 
-          const subTask = task.resolution.steps[`deploy_for_each_instance-${i}`]
-          if (subTask) {
-            s.state = subTask.state
-          }
-        })
-        return subTaskStates
+            const subTask = task.resolution.steps[`deploy_for_each_instance-${i}`]
+            if (subTask) {
+              s.state = subTask.state
+            }
+          })
+          return subTaskStates
+        }
+      } catch (e) {
+        console.error(e)
       }
     }
 
