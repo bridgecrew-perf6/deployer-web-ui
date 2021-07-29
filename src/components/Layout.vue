@@ -45,7 +45,7 @@
 <!--        </a-dropdown>-->
 <!--      </section>-->
 <!--    </a-layout-header>-->
-    <HeaderComponent :logoTitle="'DEPLOYER'" />
+    <HeaderComponent :logoTitle="'DEPLOYER'" :menuSelect="'/cd/biz'" />
     <a-layout>
       <a-layout-sider width="200" style="background: #fff">
         <div class="select-menu-contain">
