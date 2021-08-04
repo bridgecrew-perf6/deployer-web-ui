@@ -16,10 +16,12 @@ import {
   Checkbox,
   Form,
   Popconfirm,
-  Switch, Badge, ConfigProvider, Card,
+  Switch, Badge, ConfigProvider, Card, Col, Row, Collapse, Modal,
 } from "ant-design-vue";
 import HeaderComponent from 'menu-header-component/dist/menu-header-component.common.js'
 import 'menu-header-component/dist/menu-header-component.css'
+import TaskFlow from 'task-flow-ui/dist/task-flow-ui.umd.js'
+import 'task-flow-ui/dist/task-flow-ui.css'
 
 const app = createApp(App)
 app.use(router)
@@ -40,7 +42,12 @@ app.use(Switch)
 app.use(Badge)
 app.use(ConfigProvider)
 app.use(Card)
+app.use(Col)
+app.use(Row)
+app.use(Collapse)
+app.use(Modal)
 
 app.use(HeaderComponent)
+app.use(TaskFlow)
 
 app.mount('#app')

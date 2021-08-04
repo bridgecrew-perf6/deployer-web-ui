@@ -200,4 +200,5 @@ export interface Resolution {
 export interface DeploymentBatch {
   task: Task;
   resolution: Resolution;
+  display_resolution: Resolution;
 }

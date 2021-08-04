@@ -116,15 +116,19 @@
       <router-link :to="{ path: '/cd/biz/deploy-list', query: { appId: appId }}" >返回发布列表</router-link>
     </a-button>
   </div>
+  <div v-for="stepsList in stepsLists" :key="JSON.stringify(stepsList)">
+    <TaskFlow :stepsList="stepsList" :advancedDisplay="advancedDisplay" />
+  </div>
+<!--  <TaskFlow :stepsList="stepsList" :advancedDisplay="advancedDisplay"/>-->
 </div>
 </template>
 
 <script lang="ts">
-import {onBeforeUnmount, onMounted, reactive, ref, toRefs, UnwrapRef, watch} from "vue";
+import {onBeforeUnmount, onMounted, provide, reactive, ref, toRefs, UnwrapRef, watch} from "vue";
 import CommonHeader from "@/components/CommonHeader.vue";
 import deployerRepository from "@/api/deployerRepository";
 import {useRoute} from "vue-router";
-import {AppRsResponse, DeploymentResponse, Targets, DeploymentBatch, InstanceTemplate} from "@/utils/response";
+import {AppRsResponse, DeploymentResponse, Targets, DeploymentBatch, InstanceTemplate, Step} from "@/utils/response";
 import moment from "moment";
 import * as _ from "lodash";
 
@@ -135,6 +139,11 @@ export interface Deploy {
   rsData: AppRsResponse[];
   InstancesData: InstanceTemplate[][];
   autoRefresh: boolean;
+  stepsLists: StepsList[];
+  advancedDisplay: boolean;
+}
+export interface StepsList {
+  [key: string]: Step;
 }
 
 export default {
@@ -154,6 +163,8 @@ export default {
       rsData: [],
       InstancesData: [],
       autoRefresh: true,
+      stepsLists: [],
+      advancedDisplay: true,
     })
     const columns = [
       {
@@ -183,11 +194,26 @@ export default {
       // { dataIndex: 'WorkDir', key: 'WorkDir', title: '工作目录' },
     ]
     const timer = ref()
+    provide('advancedDisplay', stateDeploy.advancedDisplay)
+    provide('projectId', 1)
+    const spinChange = (value: boolean) => {
+      // spinning.value = value
+      if (stateDeploy.autoRefresh) {
+        if (value) {
+          clearInterval(timer.value)
+        } else {
+          watchRefresh()
+        }
+      }
+    }
+    provide('spinChange', spinChange)
 
     const queryDeploy = async () => {
       try {
         stateDeploy.deploymentInfo = await deployerRepository.queryDeployByDid(stateDeploy.deploymentId)
         const tasks = await deployerRepository.getDeploymentBatchById(stateDeploy.deploymentId)
+        stateDeploy.stepsLists = tasks.map(t => stateDeploy.advancedDisplay ? t.resolution.steps : t.display_resolution.steps)
+        console.log(stateDeploy.stepsLists)
         stateDeploy.taskMap = tasks.reduce((m, v) => {
           const rsId = v.task.input['replica_set_id'] as number
           m[rsId] = v
