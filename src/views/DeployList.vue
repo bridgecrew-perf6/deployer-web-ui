@@ -4,6 +4,7 @@
   <div>
     <a-table :columns="columns" :data-source="deployData"
              @change="paginationChange"
+             :scroll="{x: '1100px'}"
              :pagination="pagination" :rowKey="record => record.id">
       <template #name="{ text }">
         <a>{{ text }}</a>
@@ -37,7 +38,7 @@ export default {
     // const { appInfo } = toRefs(appState)
     // console.log(route.query.appId, '[[[[', appInfo)
     const columns = [
-      { dataIndex: 'target_version', key: 'target_version', title: '目标版本' },
+      { dataIndex: 'target_version', key: 'target_version', title: '目标版本', fixed: 'left', width: 150 },
       { dataIndex: 'current_version', key: 'current_version', title: '原始版本' },
       { dataIndex: 'app_name', key: 'app_name', title: '应用名' },
       { dataIndex: 'app_display_name', key: 'app_display_name', title: '应用显示名' },
@@ -45,7 +46,7 @@ export default {
       { dataIndex: 'result', key: 'result', title: '结果' },
       { dataIndex: 'create_by_username', key: 'create_by_username', title: '创建人' },
       { dataIndex: 'comment', key: 'comment', title: '备注' },
-      { title: '操作', key: 'action', slots: { customRender: 'action' }, align: 'center'},
+      { title: '操作', key: 'action', slots: { customRender: 'action' }, align: 'center', fixed: 'right', width: 120},
     ]
     const pagination = reactive({
       showSizeChanger: true,
