@@ -16,7 +16,7 @@
     "jsonwebtoken": "^8.5.1",
     "menu-header-component": "^0.2.1",
     "moment": "^2.29.1",
-    "task-flow-ui": "^0.1.4",
+    "task-flow-ui": "^0.1.5",
     "vue": "^3.0.0",
     "vue-router": "^4.0.8"
   },

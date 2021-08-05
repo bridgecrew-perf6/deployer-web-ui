@@ -1,3 +1,5 @@
+// const MonacoEditorWebpackPlugin = require('monaco-editor-webpack-plugin')
+
 const vueConfig = {
   publicPath: '/',
   outputDir: 'dist',
@@ -28,7 +30,14 @@ const vueConfig = {
         javascriptEnabled: true,
       }
     },
-  }
+  },
+  // configureWebpack: {
+  //   plugins: [
+  //     new MonacoEditorWebpackPlugin({
+  //       languages: ['yaml', 'json']
+  //     }),
+  //   ]
+  // }
 };
 
 module.exports = vueConfig;
