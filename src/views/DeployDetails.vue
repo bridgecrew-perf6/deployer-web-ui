@@ -117,7 +117,12 @@
     </a-button>
   </div>
   <div v-for="stepsList in stepsLists" :key="JSON.stringify(stepsList)">
-    <TaskFlow :stepsList="stepsList" :advancedDisplay="advancedDisplay" />
+    <TaskFlow :stepsList="stepsList" :advancedDisplay="advancedDisplay" >
+<!--      <template v-slot:taskOutputEditor="slotProps">-->
+<!--        <span>abde</span>-->
+<!--        <span class="green">{{ JSON.stringify(slotProps) }}</span>-->
+<!--      </template>-->
+    </TaskFlow>
   </div>
 <!--  <TaskFlow :stepsList="stepsList" :advancedDisplay="advancedDisplay"/>-->
 </div>
@@ -131,6 +136,7 @@ import {useRoute} from "vue-router";
 import {AppRsResponse, DeploymentResponse, Targets, DeploymentBatch, InstanceTemplate, Step} from "@/utils/response";
 import moment from "moment";
 import * as _ from "lodash";
+import * as monaco from 'monaco-editor'
 
 export interface Deploy {
   deploymentInfo: DeploymentResponse;
@@ -207,6 +213,7 @@ export default {
       }
     }
     provide('spinChange', spinChange)
+    provide('monaco', monaco)
 
     const queryDeploy = async () => {
       try {

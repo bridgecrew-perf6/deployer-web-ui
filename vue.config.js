@@ -1,4 +1,4 @@
-// const MonacoEditorWebpackPlugin = require('monaco-editor-webpack-plugin')
+const MonacoEditorWebpackPlugin = require('monaco-editor-webpack-plugin')
 
 const vueConfig = {
   publicPath: '/',
@@ -31,13 +31,13 @@ const vueConfig = {
       }
     },
   },
-  // configureWebpack: {
-  //   plugins: [
-  //     new MonacoEditorWebpackPlugin({
-  //       languages: ['yaml', 'json']
-  //     }),
-  //   ]
-  // }
+  configureWebpack: {
+    plugins: [
+      new MonacoEditorWebpackPlugin({
+        languages: ['yaml', 'json']
+      }),
+    ]
+  }
 };
 
 module.exports = vueConfig;
