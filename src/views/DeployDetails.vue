@@ -202,25 +202,19 @@ export default {
     const timer = ref()
     provide('advancedDisplay', stateDeploy.advancedDisplay)
     provide('projectId', 1)
-    const spinChange = (value: boolean) => {
-      // spinning.value = value
-      if (stateDeploy.autoRefresh) {
-        if (value) {
-          clearInterval(timer.value)
-        } else {
-          watchRefresh()
-        }
-      }
+
+    const workflowRedo = (stepName: string) => {
+      console.log('work flow redo', stepName)
     }
-    provide('spinChange', spinChange)
     provide('monaco', monaco)
+    provide('isRedo', false)
+    provide('workflowRedo', workflowRedo)
 
     const queryDeploy = async () => {
       try {
         stateDeploy.deploymentInfo = await deployerRepository.queryDeployByDid(stateDeploy.deploymentId)
         const tasks = await deployerRepository.getDeploymentBatchById(stateDeploy.deploymentId)
         stateDeploy.stepsLists = tasks.map(t => stateDeploy.advancedDisplay ? t.resolution.steps : t.display_resolution.steps)
-        console.log(stateDeploy.stepsLists)
         stateDeploy.taskMap = tasks.reduce((m, v) => {
           const rsId = v.task.input['replica_set_id'] as number
           m[rsId] = v
