@@ -116,8 +116,8 @@
       <router-link :to="{ path: '/cd/biz/deploy-list', query: { appId: appId }}" >返回发布列表</router-link>
     </a-button>
   </div>
-  <div v-for="stepsList in stepsLists" :key="JSON.stringify(stepsList)">
-    <TaskFlow :stepsList="stepsList" :advancedDisplay="advancedDisplay" >
+  <div v-for="(stepsList, index) in stepsLists" :key="JSON.stringify(stepsList)">
+    <TaskFlow :stepsList="stepsList" :advancedDisplay="advancedDisplay" :svg-id="'deploy' + index">
 <!--      <template v-slot:taskOutputEditor="slotProps">-->
 <!--        <span>abde</span>-->
 <!--        <span class="green">{{ JSON.stringify(slotProps) }}</span>-->
