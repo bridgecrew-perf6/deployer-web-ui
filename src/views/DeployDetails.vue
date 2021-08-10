@@ -117,14 +117,8 @@
     </a-button>
   </div>
   <div v-for="(stepsList, index) in stepsLists" :key="JSON.stringify(stepsList)">
-    <TaskFlow :stepsList="stepsList" :advancedDisplay="advancedDisplay" :svg-id="'deploy' + index">
-<!--      <template v-slot:taskOutputEditor="slotProps">-->
-<!--        <span>abde</span>-->
-<!--        <span class="green">{{ JSON.stringify(slotProps) }}</span>-->
-<!--      </template>-->
-    </TaskFlow>
+    <TaskFlow :stepsList="stepsList" :advancedDisplay="advancedDisplay" :svg-id="'deploy' + index"></TaskFlow>
   </div>
-<!--  <TaskFlow :stepsList="stepsList" :advancedDisplay="advancedDisplay"/>-->
 </div>
 </template>
 
