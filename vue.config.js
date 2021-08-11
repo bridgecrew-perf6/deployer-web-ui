@@ -11,12 +11,15 @@ const vueConfig = {
     proxy: {
       '/api/v1': {
         target: 'http://172.16.97.194:7006',
+        changeOrigin: true,
       },
       '/apidocs.json': {
         target: 'http://172.16.97.194:7006',
+        changeOrigin: true,
       },
       '/api/my/': {
         target: 'http://172.16.97.194:3000',
+        changeOrigin: true
       }
     },
     watchOptions: {
