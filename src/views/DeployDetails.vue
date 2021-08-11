@@ -200,9 +200,13 @@ export default {
     const workflowRedo = (stepName: string) => {
       console.log('work flow redo', stepName)
     }
+    const jenkinsConsoleChange = async (jobName: string, buildNum: string) => {
+      console.log(jobName, buildNum, '=====')
+    }
     provide('monaco', monaco)
     provide('isRedo', false)
     provide('workflowRedo', workflowRedo)
+    provide('jenkinsConsoleChange', jenkinsConsoleChange)
 
     const queryDeploy = async () => {
       try {
