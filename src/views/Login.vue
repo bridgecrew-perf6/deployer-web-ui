@@ -10,6 +10,7 @@
 <script lang="ts">
 import deployerRepository from "@/api/deployerRepository";
 import {onErrorCaptured} from 'vue'
+import tokenRepositories from "@/composable/tokenRepositories";
 
 export default {
   name: "Login",
@@ -19,6 +20,9 @@ export default {
         const data = await deployerRepository.login()
         if (data?.url) {
           window.location.href = data.url
+        }
+        if (data?.token) {
+          tokenRepositories(data?.token)
         }
       } catch (e) {
         console.error(e)

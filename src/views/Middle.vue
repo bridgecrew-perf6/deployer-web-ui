@@ -5,6 +5,7 @@
 <script lang="ts">
 import deployerRepository from "@/api/deployerRepository";
 import router from "@/router";
+import tokenRepositories from "@/composable/tokenRepositories";
 
 export default {
   name: "Middle",
@@ -14,12 +15,8 @@ export default {
     const login = async () => {
       const data = await deployerRepository.login()
       if (data?.token) {
-        await localStorage.setItem('token', data.token)
-        await router.push('/cd/biz').then()
+        tokenRepositories(data?.token)
       }
-      // else {
-      //   router.push('/login').then()
-      // }
     }
 
     if (!token) {
