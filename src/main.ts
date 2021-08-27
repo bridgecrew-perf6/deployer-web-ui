@@ -16,7 +16,7 @@ import {
   Checkbox,
   Form,
   Popconfirm,
-  Switch, Badge, ConfigProvider, Card, Col, Row, Collapse, Modal,
+  Switch, Badge, ConfigProvider, Card, Col, Row, Collapse, Modal, Tooltip,
 } from "ant-design-vue";
 import HeaderComponent from 'menu-header-component/dist/menu-header-component.common.js'
 import 'menu-header-component/dist/menu-header-component.css'
@@ -46,6 +46,7 @@ app.use(Col)
 app.use(Row)
 app.use(Collapse)
 app.use(Modal)
+app.use(Tooltip)
 
 app.use(HeaderComponent)
 app.use(TaskFlow)

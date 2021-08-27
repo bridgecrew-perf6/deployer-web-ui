@@ -203,10 +203,14 @@ export default {
     const jenkinsConsoleChange = async (jobName: string, buildNum: string) => {
       console.log(jobName, buildNum, '=====')
     }
+    const openSonarNewView = () => {
+      console.log('openSonarNewView')
+    }
     provide('monaco', monaco)
     provide('isRedo', false)
     provide('workflowRedo', workflowRedo)
     provide('jenkinsConsoleChange', jenkinsConsoleChange)
+    provide('openSonarNewView', openSonarNewView)
 
     const queryDeploy = async () => {
       try {
